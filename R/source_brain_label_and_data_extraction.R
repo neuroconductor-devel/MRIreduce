@@ -1,15 +1,27 @@
-#Program: brain lable and data extraction
-# Programmer: Jinyao Tian
-# Date: 03/20/2024
-library(neurobase)
-library(ANTsR)
-library(fslr)
-library(EveTemplate)
-library(MNITemplate)
-library(dplyr)
-
-################################################################################
-eve_T1 = function(fpath, eve_brain, eve_brain_mask){
+#' Perform T1 Image Processing and Analysis
+#'
+#' This function performs a series of operations on T1-weighted MRI images,
+#' including reading the image, reorienting, bias correction, brain extraction,
+#' segmentation, registration to the Eve template, and extraction of intensity
+#' and tissue data. The brain volume is calculated, and the output includes
+#' arrays of intensities, tissue segmentation, and brain volume measurements.
+#'
+#' @param fpath Character string specifying the file path of the T1-weighted image.
+#' @param eve_brain File path to the Eve template brain image for registration.
+#' @param eve_brain_mask File path to the Eve template brain mask for segmentation.
+#' @param fsl_path File path to FSL installation on your computer.
+#' @param fsl_outputtype Specify the output type of fsl.
+#' @param outpath Character string specifying the file path of processed image.
+#' @return A named list with elements "intensities" for the image intensities,
+#'         "tissues" for the segmented tissue data, and "brain_volume_cm3" as a vector for
+#'         unit of volume (cm) for one voxel and the total intracranial volume in cubic centimeters. Additionally,
+#'         an .Rdata file is saved to a specified directory with this information.
+#' @import neurobase ANTsR fslr EveTemplate MNITemplate dplyr
+#' @export
+#' @examples
+#' # Example usage:
+#' # result <- eve_T1("path/to/T1/image.nii.gz", "path/to/eve_brain.nii.gz", "path/to/eve_brain_mask.nii.gz")
+eve_T1 = function(fpath, eve_brain, eve_brain_mask, fsl_path, fsl_outputtype, outpath){
   require(neurobase)
   require(ANTsR)
   require(fslr)
@@ -17,8 +29,8 @@ eve_T1 = function(fpath, eve_brain, eve_brain_mask){
   require(MNITemplate)
   require(dplyr)
 
-  options(fsl.path = "/Users/jinyaotian/fsl")
-  options(fsl.outputtype = "NIFTI_GZ")
+  options(fsl.path = fsl_path)
+  options(fsl.outputtype = fsl_outputtype)
 
   # get file name
   tmp = strsplit(fpath, "/", fixed=TRUE)
@@ -40,7 +52,8 @@ eve_T1 = function(fpath, eve_brain, eve_brain_mask){
   print(paste(Sys.time(), "Bias correct:", fnm))
   bc_t1 = fsl_biascorrect(file = t1_ro)
 
-  fl = paste0("/Users/jinyaotian/Downloads/baseline_tmp/", fnm)
+  temp_dir = tempdir()
+  fl = tempfile(pattern = fnm, tmpdir = temp_dir, fileext = ".nii.gz")
   writenii(nim=bc_t1, filename=fl)
 
   # FSL’s Brain Extraction Tool (BET)
@@ -57,7 +70,6 @@ eve_T1 = function(fpath, eve_brain, eve_brain_mask){
   # segmentation of image into white matter (class = 3), grey matter (class = 2),
   # and cerebrospinal fluid (CFS) (class = 1)
   print(paste(Sys.time(), "Brain volume segmentation:", fnm))
-  fl = paste0("/Users/jinyaotian/Downloads/baseline_tmp/", fnm)
   writenii(nim=bc_bet, filename=fl)
   msk_fast = fast(fl, type="T1", retimg=TRUE, opts='-N', reorient=FALSE)
 
@@ -83,10 +95,6 @@ eve_T1 = function(fpath, eve_brain, eve_brain_mask){
   print(paste(Sys.time(), "Register to Eve:", fnm))
   bc_bet = flirt(infile=bc_bet, reffile=eve_brain)
 
-  # label image by eve parcellation
-  # print(paste(Sys.time(), "Label to Eve:", fnm))
-  # bc_bet = mask_img(bc_bet, mask = eve_brain_mask)
-
   # extract intensity data from the image
   print(paste(Sys.time(), "Extract intensities:", fnm))
   adat = oro.nifti::img_data(bc_bet) # array
@@ -95,7 +103,6 @@ eve_T1 = function(fpath, eve_brain, eve_brain_mask){
   # and cerebrospinal fluid (CFS) (class = 1)
   print(paste(Sys.time(), "Segmentation:", fnm))
   # write and read to fix file-not-found error
-  fl = paste0("/Users/jinyaotian/Downloads/baseline/", fnm)
   writenii(nim=bc_bet, filename=fl)
   msk_fast = fast(fl, type="T1", retimg=TRUE, opts='-N', reorient=FALSE) # -N means no inhomogeneity correction
 
@@ -109,76 +116,9 @@ eve_T1 = function(fpath, eve_brain, eve_brain_mask){
   outp[[2]] = adat_fast
   outp[[3]] = c(vres,total_icv)
 
-  outfile = paste0("/Users/jinyaotian/Downloads/baseline_Rdata/", fnm, ".Rdata")
+  outfile = paste0(outpath, fnm, ".Rdata")
   save(outp, file=outfile)
-  #return(outfile)
+  return(outp)
 } # end eve_T1()
-
-################################################################################
-#Parallel running
-if(1){
-  #Data Preprocess
-
-  #Exclude images
-  id_excluded <- read.csv(file = '/Users/jinyaotian/Desktop/Bio/Project_783/Data/ID_excluded.csv')%>%
-    select(Subject)
-
-  #T1 and Fl files from baseline folder
-  baseline_path <- "/Users/jinyaotian/Downloads/baseline"
-  # List T1 files
-  t1_files <- list.files(path = baseline_path, pattern = "T1", full.names = TRUE) #1319 T1 files in baseline
-  # List FL files
-  fl_files <- list.files(path = baseline_path, pattern = "FL", full.names = TRUE) #1262 FL files in baseline
-
-
-  filter_files <- function(files) {
-    # Filter and return file names not in the id_excluded
-    filtered_files <- Filter(function(file) {
-      # Extract the numeric ID from the file name
-      id <- sub("-.*", "", basename(file))
-      # Check if the ID is not in the id_excluded vector
-      !id %in% id_excluded$Subject
-    }, files)
-
-    return(filtered_files)
-  }
-
-  # Apply the function to T1 and FL files
-  clean_t1_files <- filter_files(t1_files) #1279
-  clean_fl_files <- filter_files(fl_files) #1222
-  #40 images are removed from the baseline
-
-
-  library(foreach)
-  library(doParallel)
-  # Start time measurement
-  start_time <- Sys.time()
-
-  no_cores <- detectCores() - 1
-  cl <- makeCluster(no_cores)
-  registerDoParallel(cl)
-
-  # Parallel processing of clean_t1_files using foreach
-  results <- foreach(t1_file = clean_t1_files[63:length(clean_t1_files)], .packages = c("dplyr", "ANTsR", "fslr","neurobase", "EveTemplate", "MNITemplate")) %dopar% {
-    # Assuming eve_T1 is your function that processes each file
-    # You might need to make sure eve_brain and eve_brain_mask are available for each parallel process
-    eve_brain_fname = getEvePath("Brain")
-    eve_brain = readnii(eve_brain_fname) # read in brain-extracted Eve T1 image
-    eve_brain_mask = readEve(what = "Brain_Mask")
-    # This can involve loading or passing them within the foreach loop if necessary
-    eve_T1(t1_file, eve_brain, eve_brain_mask)
-  }
-
-  # End time measurement
-  end_time <- Sys.time()
-
-  # Print execution time
-  print(end_time - start_time)
-
-  # Deregister the parallel backend and stop the cluster
-  stopCluster(cl)
-  registerDoSEQ()
-}
-
 
 
