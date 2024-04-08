@@ -1,0 +1,86 @@
+---
+title: "README.Rmd"
+output: github_document
+references:
+- id: R-partition
+  type: article-journal
+  author:
+  - family: V. 
+    given: Popescu 
+  - family: M. 
+    given: Battaglini
+  - family: W.S. 
+    given: Hoogstrate
+  - family: S.C.J.
+    given: Verfaillie
+  - family: I.C.
+    given: Sluimer
+  - family: R.A. van
+    given: Schijndel
+  - family: B.W. 
+    given: van Dijk
+  issued:
+  - year: 2012
+  title: 'Optimizing parameter choice for FSL-Brain Extraction Tool (BET) on 3D T1 images in multiple sclerosis'
+  URL: '10.1016/j.neuroimage.2012.03.074'
+params:
+  invalidate_cache: false
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.path = "man/figures/README-",
+  out.width = "100%",
+  dpi = 320
+)
+```
+
+# <The name for the package> (not decided yet)
+
+Descriptions: 
+
+
+## Installation
+
+## Summarization of data
+
+T1 images:
+  Followup_Nifti: 691
+  Valid images: 685
+  
+  Baseline: 1319
+  Valid images: 1279
+  
+## Important decision process documentation
+
+```{r eval=FALSE}
+bc_bet <- fslbet(
+    infile = fl,
+    opts = "-B -f 0.1 -v", # from Popescu et al.
+    betcmd = "bet",
+    intern = FALSE
+  )
+```
+
+
+Reference for the options of parameters can be found from the article "Optimizing parameter choice for FSL-Brain Extraction Tool (BET) on 3D T1 images in multiple sclerosis" from Popescu et al. The main conclusion is “BET option “B” with f=0.1 after removal of the neck slices seems to work best for all acquisition protocols. ”
+
+
+```{r eval=FALSE}
+tissue_volume_info <- fslstats(file = msk_fast, 
+                               opts = paste0("-l ", tissue_type - 0.5, " -u ", tissue_type + 0.5, " -V"))
+```
+
+Thresholds:
+
+Lower Threshold (-l): This is set to tissue_type - 0.5. The subtraction of 0.5 aims to define the lower bound of the range just below the specified tissue_type value. This allows for a slight margin around the exact tissue type value to account for variations or noise in the imaging data that might cause the actual values to fluctuate slightly around the ideal or expected value.
+
+Upper Threshold (-u): This is set to tissue_type + 0.5. Similar to the lower threshold, adding 0.5 defines the upper bound of the range just above the specified tissue_type value. This inclusion of a margin above the exact tissue type value serves the same purpose of accommodating variations in the data.
+
+Purpose: The use of -0.5 and +0.5 as margins to define the range is a practical choice to narrowly target the intended tissue type while allowing for minor deviations in its representation in the imaging data. This method helps ensure that the tissue of interest is accurately captured despite potential noise or variability in how it appears in the scans.
+
+-V Option: The -V option in fslstats is used to calculate the volume (and voxel count) of the specified tissue type within the given threshold range. By setting the range around the tissue_type value, the command aims to calculate the volume of that specific tissue type.
+
+
