@@ -24,7 +24,7 @@
 #'
 #' @examples
 #' \dontrun{
-#'   slist <- list(ROI = "hippocampus", Index = 1)
+#'   slist <- list(ROI = "hippocampus", Index = 1, Variables = list(c('V1', 'V2', 'V3'),c('V4', 'V5', 'V6')))
 #'   thresh_vec <- seq(0.8, 1.0, by = 0.05)
 #'   tissue_segment(slist, thresh_vec, 3, "/path/to/brain_volume.rds",
 #'                  "/path/to/data", "/path/to/partitions", "/path/to/store")
@@ -81,6 +81,16 @@ tissue_segment <- function(slist, thresh_vec, tissue_type, brain_volume_path, in
   brainv_df <- readRDS(file = brain_volume_path)
 
   process_threshold <- function(thred) {
+    # Define the output file paths
+    intensity_file_path <- file.path(output_path, paste0('intensity_', module, '_', thred, '_.rds'))
+    volume_file_path <- file.path(output_path, paste0('volume_', module, '_', thred, '_.rds'))
+
+    # Check if both files exist
+    if (file.exists(intensity_file_path) && file.exists(volume_file_path)) {
+      return(paste("No processing needed; output files already exist for threshold", thred))
+    }
+
+    # File processing operations if files do not exist
     file_path <- file.path(par.path, paste0('Par_intensities_map_', module, '_', thred, '_', ROI, '_.rds'))
     par_map <- readRDS(file_path)
 
@@ -100,7 +110,7 @@ tissue_segment <- function(slist, thresh_vec, tissue_type, brain_volume_path, in
 
     for (i in 1:length(results)) {
       intensity_mean_matrix[, i] <- results[[i]][[1]]
-      count_voxel_matrix[, 1] <- count_voxel_matrix[, 1] + results[[i]][[2]]
+      count_voxel_matrix[, 1] = count_voxel_matrix[, 1] + results[[i]][[2]]
     }
 
     colnames(intensity_mean_matrix) <- par_map[, 'variable']
@@ -109,18 +119,17 @@ tissue_segment <- function(slist, thresh_vec, tissue_type, brain_volume_path, in
     intensity_df <- data.frame(intensity_mean_matrix, fname = rowname)
     volume_df <- data.frame(count_voxel_matrix, fname = rowname)
 
-    # Perform the inner join based on row names and fname
-    joined_df <- inner_join(volume_df, brainv_df, by ="fname")
-
-    # Compute volume
+    # Perform the inner join and calculations as before
+    joined_df <- inner_join(volume_df, brainv_df, by = "fname")
     joined_df <- joined_df %>%
       mutate(volume = count_voxel * unit_voxel) %>%
       select(fname, volume)
 
-    saveRDS(intensity_df, file = file.path(output_path, paste0('intensity_', module, '_', thred, '_.rds')))
-    saveRDS(joined_df, file = file.path(output_path, paste0('volume_', module, '_', thred, '_.rds')))
+    # Save the output files
+    saveRDS(intensity_df, file = intensity_file_path)
+    saveRDS(joined_df, file = volume_file_path)
 
-    return(paste("Processed threshold", thred))
+    return(paste("Processed and saved data for threshold", thred))
   }
 
   rslts <- lapply(thresh_vec, process_threshold)
