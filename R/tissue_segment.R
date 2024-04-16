@@ -1,25 +1,28 @@
-#' Process Tissue Segmentation and Compute Volumes
+#' Process Tissue Segmentation for Specified ROIs
 #'
-#' This function performs tissue segmentation for specified regions of interest (ROIs),
-#' computes intensity and volume metrics, and saves the results for different thresholds.
-#' It supports different tissue types and uses parallel processing for efficiency.
+#' This function processes tissue segmentation based on specified regions of interest (ROIs),
+#' computes intensity and optionally combines it with brain volume data if provided.
+#' It handles multiple tissue types and processes data for different thresholds,
+#' saving the output in specified directories.
 #'
-#' @param slist A list containing details of the segmentation task including the ROI and module index.
-#' @param thresh_vec A numeric vector of threshold values to be used for processing intensity maps.
-#' @param tissue_type An integer indicating the type of tissue to process:
-#'   - `1` for CFS
-#'   - `2` for GM (Gray Matter)
-#'   - `3` for WM (White Matter)
-#' @param brain_volume_path A string indicating the path to the brain volume RDS file which contains unit voxel information.
-#' @param indir A string, the directory path where tissue and intensity data are stored.
-#' @param indir.par A string, the directory path where partition data are stored.
+#' @param slist A list containing the ROI and module index.
+#' @param thresh_vec A numeric vector of thresholds for processing the data.
+#' @param tissue_type An integer that specifies the tissue type:
+#'   - `1` for Cerebrospinal Fluid (CFS)
+#'   - `2` for Gray Matter (GM)
+#'   - `3` for White Matter (WM)
+#' @param brain_volume_path Optional; a string specifying the path to the brain volume RDS file.
+#'   If provided, volume calculations are performed by combining count voxel data with unit voxel values.
+#' @param indir A string, the directory path where tissue and intensity data files are stored.
+#' @param indir.par A string, the directory path where partition data files are stored.
 #' @param store.dir A string, the directory path where results should be stored.
 #'
-#' @details The function reads the intensity and tissue data from the specified directories,
-#' adjusts the data by removing the first three rows, and computes the mean intensity
-#' and volume metrics based on the specified tissue type. Results are saved in RDS format.
+#' @details The function first checks if output files already exist to avoid reprocessing.
+#' If not, it processes the data for each threshold, modifies map and partition data based on the chromosome,
+#' and saves the results. If `brain_volume_path` is provided, it performs additional computations to combine
+#' voxel data with brain volume data and saves the combined result.
 #'
-#' @return Returns a vector of messages indicating the completion status for each threshold processed.
+#' @return A vector of messages indicating the completion status for each threshold processed.
 #' These messages are also printed to the console.
 #'
 #' @examples
@@ -31,7 +34,7 @@
 #' }
 #'
 #' @export
-tissue_segment <- function(slist, thresh_vec, tissue_type, brain_volume_path, indir, indir.par, store.dir) {
+tissue_segment <- function(slist, thresh_vec, tissue_type, brain_volume_path = NULL, indir, indir.par, store.dir) {
   require(dplyr)
   if (tissue_type == 3){
     t.name = 'WM'
@@ -77,9 +80,6 @@ tissue_segment <- function(slist, thresh_vec, tissue_type, brain_volume_path, in
   rowname <- rownames(data_tissue) #images
   data <- fl.intensity[rowname, ]
 
-  #Brain unit voxel
-  brainv_df <- readRDS(file = brain_volume_path)
-
   process_threshold <- function(thred) {
     # Define the output file paths
     intensity_file_path <- file.path(output_path, paste0('intensity_', module, '_', thred, '_.rds'))
@@ -119,15 +119,17 @@ tissue_segment <- function(slist, thresh_vec, tissue_type, brain_volume_path, in
     intensity_df <- data.frame(intensity_mean_matrix, fname = rowname)
     volume_df <- data.frame(count_voxel_matrix, fname = rowname)
 
-    # Perform the inner join and calculations as before
-    joined_df <- inner_join(volume_df, brainv_df, by = "fname")
-    joined_df <- joined_df %>%
-      mutate(volume = count_voxel * unit_voxel) %>%
-      select(fname, volume)
+    if (!is.null(brain_volume_path)) {
+      brainv_df <- readRDS(file = brain_volume_path)
+      joined_df <- inner_join(volume_df, brainv_df, by = "fname") %>%
+        mutate(volume = count_voxel * unit_voxel) %>%
+        select(fname, volume)
+      saveRDS(joined_df, file = volume_file_path)
+    } else {
+      saveRDS(volume_df, file = volume_file_path)
+    }
 
-    # Save the output files
     saveRDS(intensity_df, file = intensity_file_path)
-    saveRDS(joined_df, file = volume_file_path)
 
     return(paste("Processed and saved data for threshold", thred))
   }
