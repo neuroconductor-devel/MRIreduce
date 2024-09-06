@@ -28,7 +28,7 @@ jobs:
 
       - name: Install required R packages
         run: |
-          install.packages(c('remotes', 'devtools'), repos = 'https://cloud.r-project.org/')
+          install.packages('remotes'), repos = 'https://cloud.r-project.org/')
         shell: Rscript {0}
 
       # Install dependencies, including EveTemplate
@@ -47,17 +47,17 @@ jobs:
 
       - name: Install extrantsr package
         run: |
-          devtools::install_github("muschellij2/extrantsr")
+          remotes::install_github("muschellij2/extrantsr")
         shell: Rscript {0}
 
       - name: Install fslr package
         run: |
-          devtools::install_github("muschellij2/fslr")
+          remotes::install_github("muschellij2/fslr")
         shell: Rscript {0}
 
       - name: Install ANTsR package
         run: |
-          devtools::install_github('ANTsX/ANTsR')
+          remotes::install_github('ANTsX/ANTsR')
         shell: Rscript {0}
 
       - uses: r-lib/actions/setup-r-dependencies@v2
