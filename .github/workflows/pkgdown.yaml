@@ -30,6 +30,12 @@ jobs:
         run: |
           install.packages('remotes', repos = 'https://cloud.r-project.org/')
         shell: /usr/local/bin/Rscript {0}
+
+      - name: Install remotes package
+        run: |
+          install.packages('devtools', repos = 'https://cloud.r-project.org/')
+        shell: /usr/local/bin/Rscript {0}
+
       # Install dependencies, including EveTemplate
       - name: Install EveTemplate package
         run: |
@@ -43,6 +49,23 @@ jobs:
           NOT_CRAN: true
           RSPM: https://packagemanager.posit.co/cran/__linux__/jammy/latest
           RENV_CONFIG_REPOS_OVERRIDE: https://packagemanager.posit.co/cran/__linux__/jammy/latest
+
+      - name: Install extrantsr package
+        run: |
+          devtools::install_github("muschellij2/extrantsr")
+        shell: Rscript {0}
+
+      - name: Install fslr package
+        run: |
+          devtools::install_github("muschellij2/fslr")
+        shell: Rscript {0}
+
+      - name: Install ANTsR package
+        run: |
+          devtools::install_github('ANTsX/ANTsR')
+        shell: Rscript {0}
+
+
 
       - uses: r-lib/actions/setup-r-dependencies@v2
         with:
