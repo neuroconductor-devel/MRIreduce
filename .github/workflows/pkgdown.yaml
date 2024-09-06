@@ -27,8 +27,18 @@ jobs:
           use-public-rspm: true
 
       # Install dependencies, including EveTemplate
-      - name: Install dependencies
-        run: remotes::install_github("neuroconductor/EveTemplate")
+      - name: Install EveTemplate package
+        run: |
+          remotes::install_github("neuroconductor/EveTemplate")
+        shell: Rscript {0}
+        env:
+          GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
+          R_LIBS_USER: /home/runner/work/_temp/Library
+          TZ: UTC
+          _R_CHECK_SYSTEM_CLOCK_: FALSE
+          NOT_CRAN: true
+          RSPM: https://packagemanager.posit.co/cran/__linux__/jammy/latest
+          RENV_CONFIG_REPOS_OVERRIDE: https://packagemanager.posit.co/cran/__linux__/jammy/latest
 
       - uses: r-lib/actions/setup-r-dependencies@v2
         with:
