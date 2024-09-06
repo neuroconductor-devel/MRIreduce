@@ -26,6 +26,10 @@ jobs:
         with:
           use-public-rspm: true
 
+      - name: Install remotes package
+        run: |
+          install.packages('remotes', repos = 'https://cloud.r-project.org/')
+        shell: /usr/local/bin/Rscript {0}
       # Install dependencies, including EveTemplate
       - name: Install EveTemplate package
         run: |
