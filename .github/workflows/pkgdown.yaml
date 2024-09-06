@@ -26,15 +26,10 @@ jobs:
         with:
           use-public-rspm: true
 
-      - name: Install remotes package
+      - name: Install required R packages
         run: |
-          install.packages('remotes', repos = 'https://cloud.r-project.org/')
-        shell: /usr/local/bin/Rscript {0}
-
-      - name: Install remotes package
-        run: |
-          install.packages('devtools', repos = 'https://cloud.r-project.org/')
-        shell: /usr/local/bin/Rscript {0}
+          install.packages(c('remotes', 'devtools'), repos = 'https://cloud.r-project.org/')
+        shell: Rscript {0}
 
       # Install dependencies, including EveTemplate
       - name: Install EveTemplate package
@@ -64,8 +59,6 @@ jobs:
         run: |
           devtools::install_github('ANTsX/ANTsR')
         shell: Rscript {0}
-
-
 
       - uses: r-lib/actions/setup-r-dependencies@v2
         with:
