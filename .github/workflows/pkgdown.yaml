@@ -48,3 +48,7 @@ jobs:
           clean: false
           branch: gh-pages
           folder: docs
+      - name: Install dependencies
+        run: |
+          install.packages('remotes')
+          remotes::install_github("neuroconductor/EveTemplate")
