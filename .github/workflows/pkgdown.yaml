@@ -28,7 +28,7 @@ jobs:
 
       - name: Install required R packages
         run: |
-          install.packages('remotes'), repos = 'https://cloud.r-project.org/')
+          install.packages('remotes', repos = 'https://cloud.r-project.org/')
         shell: Rscript {0}
 
       # Install dependencies, including EveTemplate
