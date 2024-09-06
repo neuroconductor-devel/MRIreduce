@@ -28,9 +28,7 @@ jobs:
 
       # Install dependencies, including EveTemplate
       - name: Install dependencies
-        run: |
-          install.packages('remotes')
-          remotes::install_github("neuroconductor/EveTemplate")
+        run: remotes::install_github("neuroconductor/EveTemplate")
 
       - uses: r-lib/actions/setup-r-dependencies@v2
         with:

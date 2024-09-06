@@ -21,7 +21,8 @@ Imports:
     reshape2,
     parallel,
     roxygen2,
-    DT
+    DT,
+    remotes
 SystemRequirements: FSL (FMRIB Software Library, available at https://fsl.fmrib.ox.ac.uk/fsl/docs/#/install/index)
 LinkingTo: 
     Rcpp
