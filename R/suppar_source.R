@@ -1,25 +1,49 @@
-#' Superimpose Partition
+#' Super Partitioning of Variables Based on Correlation
 #'
-#' Assign features to groups in an agglomerative approach according to correlations
-#' between pairs of features with constraints on group size and feature group membership.
+#' This function identifies and groups highly correlated variables into modules
+#' from a given dataset using a series of correlation computations stored across
+#' temporary files. It utilizes a hierarchical chunk processing method to handle
+#' large datasets.
 #'
-#' @param tmp DataFrame of features.
-#' @param thresh Numeric vector specifying correlation thresholds.
-#' @param n.chunkf Integer, the number of features to process in each chunk.
-#' @param B Integer, the maximum group size.
-#' @param compute.corr Logical, whether to compute correlations.
-#' @param dist.thresh Numeric, distance threshold for including correlations.
-#' @param dir.tmp Character, path to a temporary directory for storing intermediate results.
+#' @param tmp A data frame or matrix of data to be analyzed.
+#' @param thresh Numeric vector; thresholds for defining the correlation strength
+#'     necessary to consider two variables as connected or dependent. The function
+#'     creates modules of variables that have correlations above these thresholds.
+#' @param n.chunkf Integer; the number of features to process per chunk in the
+#'     correlation analysis.
+#' @param B Integer; the maximum size of a module. If a module reaches this size,
+#'     it will not be merged with other modules even if its members are correlated
+#'     with members of another module.
+#' @param compute.corr Logical; should the correlation be computed (TRUE) or
+#'     pre-computed correlations be used (FALSE).
+#' @param dist.thresh Optional; a distance threshold to apply before computing
+#'     correlations, allowing for spatial constraints on correlation computation.
+#' @param dir.tmp Directory path where temporary correlation files are stored.
 #'
-#' @return A list containing two elements: a list of feature groups and a vector of independent features.
+#' @details
+#' `suppar` function starts by setting up the environment and preparing the data.
+#' If `compute.corr` is TRUE, it computes the correlation and stores the results in
+#' temporary files in `dir.tmp`. It then loads these files one by one, aggregates
+#' correlated variables into groups using the `partagg` function, and finally,
+#' it cleans up the temporary files.
+#'
+#' The `corfun1` and `corfun2` are helper functions called within `suppar` to manage
+#' the computation of correlations in chunks and saving those in a manageable manner,
+#' which helps in processing large datasets without overwhelming memory resources.
+#'
+#' `partagg`, an Rcpp function, efficiently processes and aggregates variables into
+#' modules based on the correlation data read from the temporary files. It ensures
+#' that the size of any module does not exceed the `B` parameter.
+#'
+#' @return A list containing two elements:
+#'     - A list of character vectors, where each vector contains the names of
+#'       variables that form a module.
+#'     - A character vector of independent variables not included in any module.
 #' @export
 #' @examples
-#' \dontrun{
-#'   result <- suppar(tmp = myData, thresh = c(0.5, 0.75), n.chunkf = 100,
-#'                    B = 2000, compute.corr = TRUE, dist.thresh = NULL,
-#'                    dir.tmp = "temp_corr_temp")
-#' }
-#' @export
+#' data(matrix(rnorm(10000), ncol = 100))
+#' suppar(tmp = data, thresh = c(0.5, 0.3, 0.1), n.chunkf = 100, B = 50,
+#'        compute.corr = TRUE, dir.tmp = "path/to/tempdir")
 suppar = function(tmp, thresh=NULL, n.chunkf=10000, B = 2000, compute.corr=TRUE, dist.thresh=NULL, dir.tmp){
   cchunk.l = 10^6 # chunk processing of correlation file datasets, number of rows
   if(is.null(colnames(tmp))) colnames(tmp) = paste0("V", 1:ncol(tmp))
@@ -197,5 +221,3 @@ efun = function(vec, mypair){
   s = ifelse(sum(lvec) > 0, TRUE, FALSE)
   return(s)
 }
-
-

@@ -1,19 +1,37 @@
 Package: whims
 Type: Package
-Title: What the Package Does (Title Case)
+Title: NeuroPartitioner: An R Package for ROI-Based Transformation of Neuroimages into High-Dimensional Data Frames
 Version: 0.1.0
 Authors@R: c(
-    person("Jinyao", "Tian", , "jinyaoti@usc.edu", role = "aut")
+    person("Joshua", "Milstein", email = "joshua.millstein@usc.edu", role = c("aut")),
+    person("Jinyao", "Tian", email = "jinyaoti@usc.edu", role = c("aut", "cre"))
   )
-Maintainer: Jinyao Tian <jinyaoti@usc.edu>
-Description: More about what it does (maybe more than one line)
-    Use four spaces when indenting paragraphs within the Description.
+Maintainer: Jinyao Tian <jinyaoti@usc.edu>, Joshua Milstein <joshua.millstein@usc.edu>
+Description: NeuroPartitioner is an advanced R package designed to convert NIfTI format T1/FL neuroimages into structured, high-dimensional 2D data frames, focusing on region of interest (ROI) based processing. This package incorporates a key algorithm called ‘partition’, which offers a fast, flexible framework for agglomerative partitioning based on the Direct-Measure-Reduce approach. This method ensures that each reduced variable maintains a user-specified minimum level of information while being interpretable, as each maps uniquely to one variable in the reduced dataset. The ‘partition’ algorithm, detailed in Millstein et al. (2020), allows for customization in variable selection, measurement of information loss, and data reduction methods. NeuroPartitioner is indispensable for researchers requiring efficient, accurate preparation of neuroimaging data for detailed statistical analysis and machine learning applications, enhancing the interpretability and utility of neuroimaging studies.
 License: MIT + file LICENSE
-Encoding: UTF-8
-LazyData: true
-
 Imports:
-    Partition (>= version_number)
-
+    Rcpp,
+    devtools,
+    partition,
+    dplyr,
+    ggplot2,
+    neurobase,
+    purrr,
+    tibble,
+    reshape2,
+    parallel,
+    roxygen2,
+    DT
+SystemRequirements: FSL (FMRIB Software Library, available at https://fsl.fmrib.ox.ac.uk/fsl/docs/#/install/index)
 LinkingTo: 
     Rcpp
+Encoding: UTF-8
+Language: en-US
+LazyData: true
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.3.2
+Suggests: 
+    knitr,
+    rmarkdown
+VignetteBuilder: knitr
+URL: https://jtian123.github.io/WHIMs/

@@ -1,0 +1,84 @@
+---
+title: "Introduction to NeuroPartitioner"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Introduction to NeuroPartitioner}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+library(whims)
+library(DT)
+```
+
+# Region Labels and Structures
+
+Below is a table showing sample data for `tind`, `roi_text_label`, and `roi` from the dataset:
+
+```{r echo=FALSE, results='asis'}
+# Set the correct path to the RData file within the package
+data_path <- system.file("extdata", "eve_label_info_dataframe.RData", package = "whims")
+# Load the data
+load(data_path)
+
+# Enhanced table format using kableExtra
+datatable(lab_df[c("integer_label", "text_label", "structure")], 
+             options = list(pageLength = 20),  # Set number of rows per page
+             caption = 'Interactive table of complete data from the brain regions dataset.')
+```
+
+# Process T1-weighted Brain MRI Data with FSL and Register to EVE Atlas
+
+**Make sure you have installed FSL following the instruction from README.**
+
+The following steps outline the image processing pipeline:
+
+- Image Reorientation
+
+- Bias Correction
+
+- Brain Extraction
+
+- Image Registration (Eve template)
+
+- Extraction of Intensity Data
+
+- Segmentation into WM (White Matter), GM (Gray Matter), and Cerebrospinal Fluid
+
+- Extraction of Tissue Mask Array Data
+
+- Intracranial Brain Volume Calculation
+
+```{r, eval = FALSE}
+eve_T1(fpath, outpath, fsl_path , fsl_outputtype = "NIFTI_GZ")
+```
+
+**fpath** Character string specifying the path to one T1-weighted MRI file. This function may take a while, so be patient. In addition, if you have multiple MRI files, you can easily parallel process them using this function either with some parallel packages in R or high performance computing. 
+
+# Run Partition Pipeline on Neuroimaging Data
+
+Pipeline:
+
+-	Applied Super-Partition based on ROIs. (Here we use Josh’s super-partition algorithm, which considers 3D locations)
+
+-	Applied Partition algorithm after Super-Partition.
+
+-	Tissue segmentation based on ROIs
+
+For example, I want to process roi "superior_parietal_lobule". From the **Region Labels and Structures** above, tind = 1. In addition, I should set up a directory to store all processing files and datasets. The final output won't be return, instead, it would be saved under **/main_dir/partition/roi/thresh/tissue_type/cmb/intensities_whole.rds & /main_dir/partition/roi/thresh/tissue_type/cmb/volume_whole.rds**.
+
+Another thing needed to be noted is that **parallel** has been implemented into the function. Users can choose the number of cores they want to use for the algorithm. The more cores are used, the faster would be for the "Partition" process.  
+
+```{r, eval = FALSE}
+run_partition_pipeline(tind = 1, nfl = list.files('/Users/jinyaotian/Downloads/pipeline_test/eve_t1', full.names = TRUE), main_dir = "/Users/jinyaotian/Downloads/pipeline_test", tissue_type = 2,ICC_thresh_vec = c(0.8, 0.9), num_cores = 4, suppar_thresh_vec = seq(0.7, 1, 0.01),B = 2000, outp_volume = TRUE)
+```
+
+
