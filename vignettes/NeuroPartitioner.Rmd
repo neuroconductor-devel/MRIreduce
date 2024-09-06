@@ -35,8 +35,9 @@ datatable(lab_df[c("integer_label", "text_label", "structure")],
              caption = 'Interactive table of complete data from the brain regions dataset.')
 ```
 
-## Process T1-weighted Brain MRI Data with FSL and Register to EVE Atlas
+<br><br>  <!-- Adds two line breaks -->
 
+## Process T1-weighted Brain MRI Data with FSL and Register to EVE Atlas
 
 Ensure FSL is installed as per the instructions provided in the [package README](https://github.com/jtian123/WHIMs).
 
@@ -59,9 +60,13 @@ eve_T1(fpath, outpath, fsl_path , fsl_outputtype = "NIFTI_GZ")
 
 **fpath**: A character string specifying the path to one T1-weighted MRI file. The file should be in NIFTI file format (.nii.gz). Processing may take some time, so please be patient. For handling multiple MRI files, consider using parallel processing with R's parallel computation packages or through high-performance computing resources to improve efficiency.
 
+<br><br>  <!-- Adds two line breaks -->
+
 ## Run Partition Pipeline on Neuroimaging Data
 
 This section describes how to utilize the pipeline for processing neuroimaging data through sequential application of sophisticated algorithms and segmentation based on Regions of Interest (ROIs).
+
+<br>  <!-- Adds one line breaks -->
 
 ### Pipeline Overview:
 
@@ -69,12 +74,16 @@ This section describes how to utilize the pipeline for processing neuroimaging d
 - **Partition Algorithm**: Processes data post Super-Partition using the [Partition algorithm](https://github.com/USCbiostats/partition), enhancing data structuring.
 - **Tissue Segmentation**: Segments the processed data by tissue type within each ROI.
 
+<br>  <!-- Adds one line breaks -->
+
 ### Practical Example:
 
 To process the ROI named "inferior_frontal_gyrus", identify the corresponding `tind` (in this example, `tind = 5`) from the **Region Labels and Structures** section. You'll need to set up a directory to manage all processing files and datasets. Note that the outputs from this pipeline will not be returned directly but will be stored at specified locations:
 
 - Intensity data: **/main_dir/partition/roi/thresh/tissue_type/cmb/intensities_whole.rds**
 - Volume data: **/main_dir/partition/roi/thresh/tissue_type/cmb/volume_whole.rds**
+
+<br>  <!-- Adds one line breaks -->
 
 ### Parallel Processing:
 

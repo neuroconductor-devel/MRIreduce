@@ -1,5 +1,11 @@
-#Purpose: Make an object for this pipeline, to streamline them
+#' Partition Pipeline for Image Analysis
+#'
+#' This R6 class is designed to streamline the processing pipeline for image analysis,
+#' including steps from initial processing to combining independent variables with
+#' reduced variables by tissue type by ROI.
+#'
 #' @import R6
+#' @export
 PartitionPipeline <- R6Class("PartitionPipeline",
                            public = list(
                              tind = NULL,

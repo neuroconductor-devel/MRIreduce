@@ -1,4 +1,18 @@
 url: https://jtian123.github.io/WHIMs/
 template:
   bootstrap: 5
+  bootswatch: cosmo  # Using the Flatly theme from Bootswatch
 
+navbar:
+  title: NeuroPartitioner
+  left:
+    - text: Home
+      href: index.html
+    - text: Get Started
+      href: articles/NeuroPartitioner.html  # Link directly to your vignette
+    - text: Reference
+      href: reference/index.html
+  right:
+    - text: View on source code
+      href: https://github.com/jtian123/WHIMs
+      icon: fab fa-github
