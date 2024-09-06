@@ -14,14 +14,14 @@ knitr::opts_chunk$set(
 )
 ```
 
-```{r setup}
+```{r setup, include=FALSE}
 library(whims)
 library(DT)
 ```
 
-# Region Labels and Structures
+## Region of Interest (ROI) Overview
 
-Below is a table showing sample data for `tind`, `roi_text_label`, and `roi` from the dataset:
+There are 130 ROIs in total. Below is a table showing the indication relation for each ROI, including the index (`tind`), the text label (`roi_text_label`), and the ROI identification (`roi`):
 
 ```{r echo=FALSE, results='asis'}
 # Set the correct path to the RData file within the package
@@ -35,51 +35,66 @@ datatable(lab_df[c("integer_label", "text_label", "structure")],
              caption = 'Interactive table of complete data from the brain regions dataset.')
 ```
 
-# Process T1-weighted Brain MRI Data with FSL and Register to EVE Atlas
+## Process T1-weighted Brain MRI Data with FSL and Register to EVE Atlas
 
-**Make sure you have installed FSL following the instruction from README.**
 
-The following steps outline the image processing pipeline:
+Ensure FSL is installed as per the instructions provided in the [package README](https://github.com/jtian123/WHIMs).
 
-- Image Reorientation
+This vignette outlines the sequential steps involved in the image processing pipeline, designed to prepare and analyze T1-weighted brain MRI data effectively:
 
-- Bias Correction
+1. **Image Reorientation:** Adjusts the image to align with a standard orientation, facilitating consistent analyses and comparisons.
+2. **Bias Correction:** Reduces scanner-induced intensity inhomogeneities to improve tissue contrast and measurement accuracy.
+3. **Brain Extraction:** Isolates the brain from surrounding skull and other non-brain tissues, which is critical for accurate subsequent analyses.
+4. **Image Registration (EVE template):** Aligns the MRI data to the EVE Atlas, ensuring that anatomical regions are correctly mapped and comparable across datasets.
+5. **Extraction of Intensity Data:** Gathers crucial signal intensity information from the brain images, which is fundamental for detailed tissue analysis.
+6. **Segmentation:** Divides the brain into White Matter (WM), Gray Matter (GM), and Cerebrospinal Fluid (CSF), allowing for targeted studies of these distinct tissue types.
+7. **Extraction of Tissue Mask Array Data:** Retrieves detailed spatial information about tissue distribution, essential for volume and location-specific studies.
+8. **Intracranial Brain Volume Calculation:** Computes the total brain volume, providing a baseline for various comparative and diagnostic assessments.
 
-- Brain Extraction
-
-- Image Registration (Eve template)
-
-- Extraction of Intensity Data
-
-- Segmentation into WM (White Matter), GM (Gray Matter), and Cerebrospinal Fluid
-
-- Extraction of Tissue Mask Array Data
-
-- Intracranial Brain Volume Calculation
+By following these structured steps, users can ensure comprehensive processing of MRI data, facilitating robust analyses and research conclusions.
 
 ```{r, eval = FALSE}
 eve_T1(fpath, outpath, fsl_path , fsl_outputtype = "NIFTI_GZ")
 ```
 
-**fpath** Character string specifying the path to one T1-weighted MRI file. This function may take a while, so be patient. In addition, if you have multiple MRI files, you can easily parallel process them using this function either with some parallel packages in R or high performance computing. 
+**fpath**: A character string specifying the path to one T1-weighted MRI file. The file should be in NIFTI file format (.nii.gz). Processing may take some time, so please be patient. For handling multiple MRI files, consider using parallel processing with R's parallel computation packages or through high-performance computing resources to improve efficiency.
 
-# Run Partition Pipeline on Neuroimaging Data
+## Run Partition Pipeline on Neuroimaging Data
 
-Pipeline:
+This section describes how to utilize the pipeline for processing neuroimaging data through sequential application of sophisticated algorithms and segmentation based on Regions of Interest (ROIs).
 
--	Applied Super-Partition based on ROIs. (Here we use Josh’s super-partition algorithm, which considers 3D locations)
+### Pipeline Overview:
 
--	Applied Partition algorithm after Super-Partition.
+- **Super-Partition**: Applies Josh's super-partition algorithm, which considers 3D locations to group data based on ROIs.
+- **Partition Algorithm**: Processes data post Super-Partition using the [Partition algorithm](https://github.com/USCbiostats/partition), enhancing data structuring.
+- **Tissue Segmentation**: Segments the processed data by tissue type within each ROI.
 
--	Tissue segmentation based on ROIs
+### Practical Example:
 
-For example, I want to process roi "superior_parietal_lobule". From the **Region Labels and Structures** above, tind = 1. In addition, I should set up a directory to store all processing files and datasets. The final output won't be return, instead, it would be saved under **/main_dir/partition/roi/thresh/tissue_type/cmb/intensities_whole.rds & /main_dir/partition/roi/thresh/tissue_type/cmb/volume_whole.rds**.
+To process the ROI named "inferior_frontal_gyrus", identify the corresponding `tind` (in this example, `tind = 5`) from the **Region Labels and Structures** section. You'll need to set up a directory to manage all processing files and datasets. Note that the outputs from this pipeline will not be returned directly but will be stored at specified locations:
 
-Another thing needed to be noted is that **parallel** has been implemented into the function. Users can choose the number of cores they want to use for the algorithm. The more cores are used, the faster would be for the "Partition" process.  
+- Intensity data: **/main_dir/partition/roi/thresh/tissue_type/cmb/intensities_whole.rds**
+- Volume data: **/main_dir/partition/roi/thresh/tissue_type/cmb/volume_whole.rds**
 
-```{r, eval = FALSE}
-run_partition_pipeline(tind = 1, 
-nfl =list.files('/Users/jinyaotian/Downloads/pipeline_test/eve_t1', full.names = TRUE), main_dir = "/Users/jinyaotian/Downloads/pipeline_test", tissue_type = 2,ICC_thresh_vec = c(0.8, 0.9), num_cores = 4, suppar_thresh_vec = seq(0.7, 1, 0.01),B = 2000, outp_volume = TRUE)
+### Parallel Processing:
+
+This function is equipped with parallel processing capabilities, allowing users to specify the number of cores they wish to utilize. Increasing the number of cores will proportionally speed up the Partition process, offering significant time savings for large datasets.
+
+```{r, eval=FALSE}
+# Run the partition pipeline with specified parameters
+run_partition_pipeline(
+  tind = 5, 
+  nfl = list.files(
+    '/Users/jinyaotian/Downloads/pipeline_test/eve_t1', 
+    full.names = TRUE
+  ),
+  main_dir = "/Users/jinyaotian/Downloads/pipeline_test",
+  tissue_type = 2,
+  ICC_thresh_vec = c(0.8, 0.9),
+  num_cores = 4,
+  suppar_thresh_vec = seq(0.7, 1, 0.01),
+  B = 2000,
+  outp_volume = TRUE
+)
 ```
-
 

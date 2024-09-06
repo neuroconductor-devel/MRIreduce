@@ -7,7 +7,7 @@
 eve_Fl(fpath, outpath, fsl_path, fsl_outputtype = "NIFTI_GZ")
 }
 \arguments{
-\item{fpath}{Character string specifying the path to the FLAIR image file.}
+\item{fpath}{Character string specifying the path to the FLAIR image file. The file should be in NIFTI file format (.nii.gz).}
 
 \item{outpath}{Character string specifying the output directory where the processed data is saved.}
 

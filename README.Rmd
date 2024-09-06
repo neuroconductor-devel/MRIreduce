@@ -1,11 +1,15 @@
 ---
-title: "Package Installation Instructions"
+title: "NeuroPartitioner"
 output: github_document
 ---
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
+
+<!-- badges: start -->
+[![USC IMAGE](https://raw.githubusercontent.com/USCbiostats/badges/master/tommy-image-badge.svg)](https://image.usc.edu)
+<!-- badges: end -->
 
 ## Installation Instructions
 

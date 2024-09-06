@@ -10,7 +10,7 @@ run_partition_pipeline(
   main_dir,
   tissue_type,
   ICC_thresh_vec,
-  num_cores,
+  num_cores = 1,
   suppar_thresh_vec = seq(0.7, 1, 0.01),
   B = 2000,
   outp_volume = TRUE
@@ -27,7 +27,7 @@ run_partition_pipeline(
 
 \item{ICC_thresh_vec}{A vector of threshold values for Intraclass Correlation Coefficient used in the Partition Algorithm.}
 
-\item{num_cores}{Number of cores to use for parallel processing.}
+\item{num_cores}{Number of cores to use for parallel processing. Default to 1.}
 
 \item{suppar_thresh_vec}{Optional; a sequence of threshold values used in Super Partitioning.
 Default is a sequence from 0.7 to 1 by 0.01.}
@@ -53,13 +53,4 @@ of the pipeline, from initial image processing (\code{iproc}) to the final combi
 of independent variables with reduced variables (\code{Cmb_indep_with_dep}), is executed
 in sequence. Adjustments to the pipeline's behavior can be made by changing the
 function parameters, allowing for custom analysis flows.
-}
-\examples{
-run_partition_pipeline(tind = 5,
-                       nfl = list.files('/path/to/data', full.names = TRUE),
-                       main_dir = "/path/to/output",
-                       tissue_type = 2,
-                       ICC_thresh_vec = c(0.8, 0.9),
-                       num_cores = 4)
-
 }

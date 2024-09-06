@@ -5,7 +5,7 @@
 #' to the EVE brain template. It then segments the brain volume into different tissue
 #' types, calculates intracranial volume and outputs the results as an Rdata file.
 #'
-#' @param fpath Character string specifying the path to the T1-weighted MRI file.
+#' @param fpath Character string specifying the path to one T1-weighted MRI file. The file should be in NIFTI file format (.nii.gz).
 #' @param outpath Character string specifying the output directory where the results
 #' will be saved as an Rdata file.
 #' @param fsl_path Character string specifying the directory where FSL is installed.

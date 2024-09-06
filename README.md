@@ -1,5 +1,11 @@
-Package Installation Instructions
+NeuroPartitioner
 ================
+
+<!-- badges: start -->
+
+[![USC
+IMAGE](https://raw.githubusercontent.com/USCbiostats/badges/master/tommy-image-badge.svg)](https://image.usc.edu)
+<!-- badges: end -->
 
 ## Installation Instructions
 

@@ -12,7 +12,7 @@ eve_T1(
 )
 }
 \arguments{
-\item{fpath}{Character string specifying the path to the T1-weighted MRI file.}
+\item{fpath}{Character string specifying the path to one T1-weighted MRI file. The file should be in NIFTI file format (.nii.gz).}
 
 \item{outpath}{Character string specifying the output directory where the results
 will be saved as an Rdata file.}

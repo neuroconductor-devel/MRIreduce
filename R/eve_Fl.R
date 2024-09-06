@@ -5,7 +5,7 @@
 #' reorienting, bias correction using N4, brain extraction, registration to the EVE template, and tissue segmentation.
 #' It finally calculates the intracranial volume and outputs the data.
 #'
-#' @param fpath Character string specifying the path to the FLAIR image file.
+#' @param fpath Character string specifying the path to the FLAIR image file. The file should be in NIFTI file format (.nii.gz).
 #' @param outpath Character string specifying the output directory where the processed data is saved.
 #' @param fsl_path Character string specifying the path to the FSL software on the system.
 #' @param fsl_outputtype Character string specifying the type of output file format for FSL; defaults to "NIFTI_GZ".

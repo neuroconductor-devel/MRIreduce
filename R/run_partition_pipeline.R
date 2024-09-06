@@ -10,7 +10,7 @@
 #' @param main_dir Main directory where outputs and intermediate results will be saved.
 #' @param tissue_type Type of tissue for segmentation.
 #' @param ICC_thresh_vec A vector of threshold values for Intraclass Correlation Coefficient used in the Partition Algorithm.
-#' @param num_cores Number of cores to use for parallel processing.
+#' @param num_cores Number of cores to use for parallel processing. Default to 1.
 #' @param suppar_thresh_vec Optional; a sequence of threshold values used in Super Partitioning.
 #'        Default is a sequence from 0.7 to 1 by 0.01.
 #' @param B Optional; the maximum size of modules to be considered in partitioning. Default is 2000.
@@ -27,16 +27,8 @@
 #' @return The function does not return a value but will output results directly to
 #'         the specified `main_dir` as side effects of the processing steps.
 #'
-#' @examples
-#' run_partition_pipeline(tind = 5,
-#'                        nfl = list.files('/path/to/data', full.names = TRUE),
-#'                        main_dir = "/path/to/output",
-#'                        tissue_type = 2,
-#'                        ICC_thresh_vec = c(0.8, 0.9),
-#'                        num_cores = 4)
-#'
 #' @export
-run_partition_pipeline <- function(tind, nfl, main_dir, tissue_type,ICC_thresh_vec, num_cores, suppar_thresh_vec = seq(0.7, 1, 0.01),B = 2000, outp_volume = TRUE) {
+run_partition_pipeline <- function(tind, nfl, main_dir, tissue_type,ICC_thresh_vec, num_cores = 1, suppar_thresh_vec = seq(0.7, 1, 0.01),B = 2000, outp_volume = TRUE) {
   pipeline <- PartitionPipeline$new(
     tind = tind,
     nfl = nfl,
