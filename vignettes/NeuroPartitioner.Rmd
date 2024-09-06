@@ -78,7 +78,8 @@ For example, I want to process roi "superior_parietal_lobule". From the **Region
 Another thing needed to be noted is that **parallel** has been implemented into the function. Users can choose the number of cores they want to use for the algorithm. The more cores are used, the faster would be for the "Partition" process.  
 
 ```{r, eval = FALSE}
-run_partition_pipeline(tind = 1, nfl = list.files('/Users/jinyaotian/Downloads/pipeline_test/eve_t1', full.names = TRUE), main_dir = "/Users/jinyaotian/Downloads/pipeline_test", tissue_type = 2,ICC_thresh_vec = c(0.8, 0.9), num_cores = 4, suppar_thresh_vec = seq(0.7, 1, 0.01),B = 2000, outp_volume = TRUE)
+run_partition_pipeline(tind = 1, 
+nfl =list.files('/Users/jinyaotian/Downloads/pipeline_test/eve_t1', full.names = TRUE), main_dir = "/Users/jinyaotian/Downloads/pipeline_test", tissue_type = 2,ICC_thresh_vec = c(0.8, 0.9), num_cores = 4, suppar_thresh_vec = seq(0.7, 1, 0.01),B = 2000, outp_volume = TRUE)
 ```
 
 
