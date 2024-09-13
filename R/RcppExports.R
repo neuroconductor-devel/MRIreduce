@@ -2,6 +2,6 @@
 # Generator token: 10BE3573-1514-4C36-9D1C-5A225CD40393
 
 partagg <- function(grpl1, corrbin, B) {
-    .Call('_whims_partagg', PACKAGE = 'whims', grpl1, corrbin, B)
+    .Call(`_MRIreduce_partagg`, grpl1, corrbin, B)
 }
 

@@ -20,10 +20,12 @@
 #' Volumes are calculated based on the segmented tissues.
 #'
 #' @examples
+#' ## Not run:
 #' eve_Fl("path/to/your/flair/image.nii.gz",
 #'        "path/to/output/",
 #'        "/usr/local/fsl",
 #'        "NIFTI_GZ")
+#' ## End(Not run)
 #'
 #' @importFrom neurobase readnii writenii
 #' @importFrom extrantsr bias_correct fslbet_robust
@@ -114,7 +116,7 @@ eve_Fl <- function(fpath,outpath, fsl_path, fsl_outputtype = "NIFTI_GZ") {
 
   # output array intensities and tissues registered to Eve
   outp <- vector("list", 3)
-  names(outp) <- c("intenisites", "tissues", "brain_volume_cm3")
+  names(outp) <- c("intensities", "tissues", "brain_volume_cm3")
   outp[[1]] <- adat
   outp[[2]] <- adat_fast
   outp[[3]] <- c(vres, bv, total_icv)

@@ -32,7 +32,9 @@
 #' Each step logs its progress with timestamps, aiding in debugging and optimization of processing times.
 #'
 #' @examples
+#' ## Not run:
 #' eve_T1("path/to/your/image.nii.gz", "path/to/output", "/usr/local/fsl",  "NIFTI_GZ")
+#' ## End(Not run)
 #'
 #' @importFrom neurobase readnii writenii
 #' @importFrom fslr fslreorient2std fsl_biascorrect fslbet fast fslstats
@@ -120,7 +122,7 @@ eve_T1 <- function(fpath, outpath, fsl_path = '/Users/jinyaotian/fsl', fsl_outpu
 
   # output array intensities and tissues registered to Eve
   outp <- vector("list", 3)
-  names(outp) <- c("intenisites", "tissues", "brain_volume_cm3")
+  names(outp) <- c("intensities", "tissues", "brain_volume_cm3")
   outp[[1]] <- adat
   outp[[2]] <- adat_fast
   outp[[3]] <- c(vres,bv, total_icv)

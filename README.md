@@ -1,4 +1,4 @@
-NeuroPartitioner
+MRIreduce
 ================
 
 <!-- badges: start -->
@@ -9,17 +9,17 @@ IMAGE](https://raw.githubusercontent.com/USCbiostats/badges/master/tommy-image-b
 
 ## Introduction
 
-NeuroPartitioner is an advanced R package designed to convert NIfTI
-format T1/FL neuroimages into structured, high-dimensional 2D data
-frames, focusing on region of interest (ROI) based processing. This
-package incorporates a key algorithm called ‘partition’, which offers a
-fast, flexible framework for agglomerative partitioning based on the
+MRIreduce is an advanced R package designed to convert NIfTI format
+T1/FL neuroimages into structured, high-dimensional 2D data frames,
+focusing on region of interest (ROI) based processing. This package
+incorporates a key algorithm called ‘partition’, which offers a fast,
+flexible framework for agglomerative partitioning based on the
 Direct-Measure-Reduce approach. This method ensures that each reduced
 variable maintains a user-specified minimum level of information while
 being interpretable, as each maps uniquely to one variable in the
 reduced dataset. The ‘partition’ algorithm, detailed in Millstein et
 al. (2020), allows for customization in variable selection, measurement
-of information loss, and data reduction methods. NeuroPartitioner is
+of information loss, and data reduction methods. MRIreduce is
 indispensable for researchers requiring efficient, accurate preparation
 of neuroimaging data for detailed statistical analysis and machine
 learning applications, enhancing the interpretability and utility of

@@ -1,18 +1,18 @@
-url: https://jtian123.github.io/WHIMs/
+url: https://jtian123.github.io/MRIreduce/
 template:
   bootstrap: 5
   bootswatch: cosmo  # Using the Flatly theme from Bootswatch
 
 navbar:
-  title: NeuroPartitioner
+  title: MRIreduce
   left:
     - text: Home
       href: index.html
     - text: Get Started
-      href: articles/NeuroPartitioner.html  # Link directly to your vignette
+      href: articles/MRIreduce.html  # Link directly to your vignette
     - text: Reference
       href: reference/index.html
   right:
     - text: View on source code
-      href: https://github.com/jtian123/WHIMs
+      href: https://github.com/jtian123/MRIreduce
       icon: fab fa-github

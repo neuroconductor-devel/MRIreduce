@@ -1,0 +1,182 @@
+---
+title: "Introduction to MRIreduce"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Introduction to MRIreduce}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup, include=FALSE}
+library(MRIreduce)
+library(DT)
+```
+
+## ROI Reference Table Overview
+
+There are 130 ROIs in total. Below is a table showing the indication relation for each ROI, including the index (`tind`), the text label (`roi_text_label`), and the ROI identification (`roi`):
+
+```{r echo=FALSE, results='asis'}
+# Set the correct path to the RData file within the package
+data_path <- system.file("extdata", "eve_label_info_dataframe.RData", package = "MRIreduce")
+# Load the data
+load(data_path)
+
+# Enhanced table format using kableExtra
+datatable(lab_df[c("integer_label", "text_label", "structure")], 
+             options = list(pageLength = 20),  # Set number of rows per page
+             caption = 'Interactive table of complete data from the brain regions dataset.')
+```
+
+<br><br>  <!-- Adds two line breaks -->
+
+## Process T1-weighted Brain MRI Data with FSL and Register to EVE Atlas
+
+Ensure FSL is installed as per the instructions provided in the [package README](https://github.com/jtian123/MRIreduce).
+
+This vignette outlines the sequential steps involved in the image processing pipeline, designed to prepare and analyze T1-weighted brain MRI data effectively:
+
+1. **Image Reorientation:** Adjusts the image to align with a standard orientation, facilitating consistent analyses and comparisons.
+2. **Bias Correction:** Reduces scanner-induced intensity inhomogeneities to improve tissue contrast and measurement accuracy.
+3. **Brain Extraction:** Isolates the brain from surrounding skull and other non-brain tissues, which is critical for accurate subsequent analyses.
+4. **Image Registration (EVE template):** Aligns the MRI data to the EVE Atlas, ensuring that anatomical regions are correctly mapped and comparable across datasets.
+5. **Extraction of Intensity Data:** Gathers crucial signal intensity information from the brain images, which is fundamental for detailed tissue analysis.
+6. **Segmentation:** Divides the brain into White Matter (WM), Gray Matter (GM), and Cerebrospinal Fluid (CSF), allowing for targeted studies of these distinct tissue types.
+7. **Extraction of Tissue Mask Array Data:** Retrieves detailed spatial information about tissue distribution, essential for volume and location-specific studies.
+8. **Intracranial Brain Volume Calculation:** Computes the total brain volume, providing a baseline for various comparative and diagnostic assessments.
+
+By following these structured steps, users can ensure comprehensive processing of MRI data, facilitating robust analyses and research conclusions. 
+
+```{r, eval = FALSE}
+eve_T1(fpath, outpath, fsl_path , fsl_outputtype = "NIFTI_GZ")
+```
+
+**fpath**: A character string specifying the path to one T1-weighted MRI file. The file should be in NIFTI file format (.nii.gz). Processing may take some time, so please be patient. For handling multiple MRI files, consider using parallel processing with R's parallel computation packages or through high-performance computing resources to improve efficiency.
+
+Sample outcome:
+
+```{r echo=FALSE}
+# Set the correct path to the RData file within the package
+data_path <- system.file("extdata", "1514935-20050520_T1.nii.gz.Rdata", package = "MRIreduce")
+# Load the data
+load(data_path)
+
+#Dimension of intensities/tissues is 
+print(dim(outp[[1]]))
+```
+
+<br><br>  <!-- Adds two line breaks -->
+
+## Run Partition Pipeline on Neuroimaging Data
+
+This section describes how to utilize the pipeline for processing neuroimaging data through sequential application of sophisticated algorithms and segmentation based on Regions of Interest (ROIs). 
+
+<br>  <!-- Adds one line breaks -->
+
+### Pipeline Overview:
+
+- **Super-Partition**: Applies Josh's super-partition algorithm, which considers 3D locations to group data based on ROIs.
+- **Partition Algorithm**: Processes data post Super-Partition using the [Partition algorithm](https://github.com/USCbiostats/partition), enhancing data reduction for highly correlated data.
+- **Tissue Segmentation**: Segments the processed data by tissue type within each ROI.
+
+<br>  <!-- Adds one line breaks -->
+
+### Practical Example:
+
+To process the ROI named "inferior_frontal_gyrus", identify the corresponding `tind` (in this example, `tind = 5`) from the **Region Labels and Structures** section. You'll need to set up a directory to manage all processing files and datasets. Note that the outputs from this pipeline will not be returned directly but will be stored at specified locations:
+
+- Intensity data: **/main_dir/partition/roi/thresh/tissue_type/cmb/intensities_whole.rds**
+- Volume data: **/main_dir/partition/roi/thresh/tissue_type/cmb/volume_whole.rds**
+
+<br>  <!-- Adds one line breaks -->
+
+### Parallel Processing:
+
+This function is equipped with parallel processing capabilities, allowing users to specify the number of cores they wish to utilize. Increasing the number of cores will proportionally speed up the Partition process, offering significant time savings for large datasets.
+
+```{r, eval=FALSE}
+# Run the partition pipeline with specified parameters
+run_partition_pipeline(
+  tind = 5, 
+  nfl = list.files(
+    '/Users/jinyaotian/Downloads/pipeline_test/eve_t1', 
+    full.names = TRUE
+  ),
+  main_dir = "/Users/jinyaotian/Downloads/pipeline_test",
+  tissue_type = 2,
+  ICC_thresh_vec = c(0.8, 0.9),
+  num_cores = 4,
+  suppar_thresh_vec = seq(0.7, 1, 0.01),
+  B = 2000,
+  outp_volume = TRUE
+)
+```
+
+### Reduced data showcase
+
+Intensity: 
+
+```{r echo=FALSE, results='asis'}
+data_path <- system.file("extdata", "intensities_whole.rds", package = "MRIreduce")
+
+# Load the data
+df = readRDS(data_path)
+
+datatable(df, 
+          options = list(
+          pageLength = 4,        # Set number of rows per page
+          scrollX = TRUE,        # Enable horizontal scrolling for columns
+          autoWidth = TRUE       # Automatically adjust column widths
+          ), 
+         caption = 'Interactive table displaying intensity data after the data pipeline for the inferior frontal gyrus (left) region, using a 0.8 partition threshold')
+```
+
+Naming convention:
+
+There are two types of feature naming formats:
+
+1. **"inferior_frontal_gyrus_left_module6_reduced_var_2"**:
+   - **First part**: "inferior_frontal_gyrus_left" corresponds to the `roi_text_label`, which refers to the region of interest (ROI) as outlined in the **ROI Reference Table Overview** above.
+   - **Second part**: "module6" indicates that this feature belongs to group 6 after the Super-Partition process. Users can disregard this part, as it is primarily for programming purposes.
+   - **Third part**: "reduced_var_2" signifies that this is the second reduced feature within "module6" following the Partition process.
+
+2. **"inferior_frontal_gyrus_left_V20234"**: This format indicates that the feature has not been reduced by the Partition algorithm. "V20234" refers to column 20234 in the original high-dimensional data.
+
+## Map Reduced Feature Back to Brain Image Voxel Locations
+
+Each voxel in a brain image corresponds to a specific feature, establishing a one-to-one mapping between a voxel and a feature. This relationship allows us to localize particular brain features to specific brain areas at the voxel level, enabling visualization of these features. However, after applying Super-Partition and Partition techniques, multiple brain features are aggregated into a single reduced feature as part of a data reduction process. The goal of the following function is to relate the reduced feature back to its component features, and subsequently identify the brain image voxels to which those component features are mapped.
+
+For example, we want to analyze the reduced feature "inferior_frontal_gyrus_left_module4_reduced_var_13".
+
+```{r, eval=FALSE}
+loc_df <- map_feature2_loc(feature_name = "inferior_frontal_gyrus_left_module4_reduced_var_13", 
+                           threshold = 0.8, 
+                           main_dir = "/path/to/data")
+```
+
+```{r echo=FALSE, results='asis'}
+library(DT)
+
+# Set the correct path to the RDS file within the package
+data_path <- system.file("extdata", "loc_df.rds", package = "MRIreduce")
+
+# Load the data
+df <- readRDS(data_path)
+
+# Enhanced table format using datatable
+datatable(df, 
+          options = list(
+            pageLength = 4,        # Set number of rows per page
+            scrollX = TRUE,        # Enable horizontal scrolling for columns
+            autoWidth = TRUE       # Automatically adjust column widths
+          ), 
+          caption = 'Mapping "inferior_frontal_gyrus_left_module4_reduced_var_13" back to Brain Image Voxel Locations')
+```
+We can see reduced feature "inferior_frontal_gyrus_left_module4_reduced_var_13" is aggregated by 488 features "V14942", "V14943", "V14894", "V19659", "V21519", "V21520", "V4237", "V6245", "V4809", "V3634"......

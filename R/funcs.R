@@ -18,8 +18,8 @@ load_required_data <- function(filename, package_name, envir = .GlobalEnv) {
 iproc <- function(tind, nfl, main_dir, outp_volume = TRUE) {
   # Load Eve labels
   # Load necessary data
-  load_required_data("eve_label_array.RData", "whims")
-  load_required_data("eve_label_info_dataframe.RData", "whims")
+  load_required_data("eve_label_array.RData", "MRIreduce")
+  load_required_data("eve_label_info_dataframe.RData", "MRIreduce")
   # Initial checks and setup
   if (!dir.exists(main_dir)) {
     stop("main_dir does not exist: ", main_dir)
@@ -283,7 +283,7 @@ tissue_segment <- function(liste, thresh_vec, tind, tissue_type, main_dir) {
     colnames(count_voxel_matrix) <- par_map[, 'variable']
 
     intensity_df <- as.data.frame(intensity_mean_matrix)
-    intensity_df$fname<- img_name
+    row.names(intensity_df)<- img_name
     volume_df <- as.data.frame(count_voxel_matrix)
     volume_df$fname <- img_name
 
@@ -300,8 +300,12 @@ tissue_segment <- function(liste, thresh_vec, tind, tissue_type, main_dir) {
       merged_df[cols_to_multiply] <- merged_df[cols_to_multiply] * merged_df$unit_voxel
       # Resulting data frame has the product, and you might want to remove the extra unit_voxel column if not needed anymore
       final_df <- merged_df[, !names(merged_df) %in% c("unit_voxel", "brainVolume")]
+      row.names(final_df) = final_df$fname
+      final_df$fname = NULL
       saveRDS(final_df, file = volume_file_path)
     } else {
+      row.names(volume_df) = volume_df$fname
+      volume_df$fname = NULL
       saveRDS(volume_df, file = volume_file_path)
     }
 
@@ -311,15 +315,38 @@ tissue_segment <- function(liste, thresh_vec, tind, tissue_type, main_dir) {
   rslts <- lapply(thresh_vec, process_threshold)
 }
 
+##Test
+# main_dir = '/Users/jinyaotian/Downloads/whims_test'
+# roi = 'inferior_frontal_gyrus_left'
+# dep_list_path = file.path(main_dir, "dep_list", paste0(roi,'.rds'))
+# listes <- readRDS(dep_list_path)
+# cat("tissue segmentation for all sublists based on super partitions.\n")
+# lapply(listes, function(sub_list) {
+#   tissue_segment(liste = sub_list,thresh_vec = 0.8,tind = 5, tissue_type =2, main_dir = main_dir )
+# })
+
 #Combine by tissue type for each threshold and roi
 Cmb_tissue_type <- function(thresh, roi, tissue_type, main_dir){
   modify_data <- function(data, roi_name) {
     colnames(data) <- paste(roi_name, colnames(data), sep = "_")
     return(data)
   }
-  read_rds_file <- function(file_path, intensity = TRUE) {
+  read_rds_file <- function(file_path) {
+    # Extract the file name
+    doc_name <- basename(file_path)
+    # Extract the number from the file name using regex
+    number <- gsub("\\D", "", doc_name)  # Remove non-numeric characters
     # Read the .rds file
     df <- readRDS(file_path)
+    # Update the column names based on whether they contain "reduced_var"
+    colnames(df) <- sapply(colnames(df), function(col_name) {
+      if (grepl("reduced_var", col_name)) {
+        return(paste0("module", number, "_", col_name))
+      } else {
+        return(col_name)
+      }
+    })
+    return(df)  # Return the modified dataframe
   }
 
   if (tissue_type == 3){
@@ -339,12 +366,10 @@ Cmb_tissue_type <- function(thresh, roi, tissue_type, main_dir){
   volume_files_with_prefix <- list.files(path = directory, pattern = paste0("^volume_"), full.names = TRUE)
 
   data_frames_intensity <- lapply(intensity_files_with_prefix, read_rds_file)
-  data_frames_volume <- lapply(volume_files_with_prefix, function(file) read_rds_file(file, intensity = FALSE))
+  data_frames_volume <- lapply(volume_files_with_prefix, read_rds_file)
 
   processed_data_frames_intensity <- lapply(data_frames_intensity, function(ls_) {
     df <- ls_
-    row.names(df) <- df$fname
-    df$fname <- NULL
     modify_data(df, roi_name = roi)
   })
 
@@ -365,6 +390,9 @@ Cmb_tissue_type <- function(thresh, roi, tissue_type, main_dir){
   saveRDS(combined_data_frame_intensity, file = file.path(save.dir,"intensities.rds"))
   saveRDS(combined_data_frame_volume, file = file.path(save.dir,"volume.rds"))
 }
+
+##Test
+#Cmb_tissue_type(thresh = 0.8, roi = roi, tissue_type = 2, main_dir = main_dir)
 
 #Process independent variables from Super-Partition
 process_indep_variables <- function(indep_list, tissue_type, tind, roi, main_dir) {
@@ -462,6 +490,9 @@ Cmb_indep_with_dep <- function(tissue_type, roi, thresh, main_dir){
     saveRDS(vol_cmb, file = file.path(main_dir, "partition", roi, thresh,t.name, "cmb", "volume_whole.rds"))
   }
 }
+
+##Test
+#Cmb_indep_with_dep(tissue_type = 2, roi = "inferior_frontal_gyrus_left", thresh = 0.8, main_dir = '/Users/jinyaotian/Downloads/whims_test')
 
 #Combine by ROI
 concat_reduced_var <- function(roi, thresh, main_dir){

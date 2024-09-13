@@ -12,7 +12,7 @@ Rcpp::Rostream<false>& Rcpp::Rcerr = Rcpp::Rcpp_cerr_get();
 
 // partagg
 List partagg(List grpl1, DataFrame corrbin, int B);
-RcppExport SEXP _whims_partagg(SEXP grpl1SEXP, SEXP corrbinSEXP, SEXP BSEXP) {
+RcppExport SEXP _MRIreduce_partagg(SEXP grpl1SEXP, SEXP corrbinSEXP, SEXP BSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -25,11 +25,11 @@ END_RCPP
 }
 
 static const R_CallMethodDef CallEntries[] = {
-    {"_whims_partagg", (DL_FUNC) &_whims_partagg, 3},
+    {"_MRIreduce_partagg", (DL_FUNC) &_MRIreduce_partagg, 3},
     {NULL, NULL, 0}
 };
 
-RcppExport void R_init_whims(DllInfo *dll) {
+RcppExport void R_init_MRIreduce(DllInfo *dll) {
     R_registerRoutines(dll, NULL, CallEntries, NULL, NULL);
     R_useDynamicSymbols(dll, FALSE);
 }

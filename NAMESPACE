@@ -3,6 +3,7 @@
 export(PartitionPipeline)
 export(eve_Fl)
 export(eve_T1)
+export(map_feature2_loc)
 export(run_partition_pipeline)
 export(suppar)
 import(R6)
