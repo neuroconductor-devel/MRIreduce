@@ -4,6 +4,6 @@
 NULL
 
 ## usethis namespace: start
-#' @useDynLib whims, .registration = TRUE
+#' @useDynLib MRIreduce, .registration = TRUE
 ## usethis namespace: end
 NULL
