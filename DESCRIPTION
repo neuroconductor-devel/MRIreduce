@@ -22,7 +22,8 @@ Imports:
     parallel,
     roxygen2,
     DT,
-    remotes
+    remotes,
+    reticulate
 Depends: R (>= 3.5.0)
 SystemRequirements: FSL (FMRIB Software Library, available at https://fsl.fmrib.ox.ac.uk/fsl/docs/#/install/index)
 LinkingTo: 
