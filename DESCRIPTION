@@ -1,7 +1,7 @@
 Package: MRIreduce
 Type: Package
 Title: MRIreduce: An R Package for ROI-Based Transformation of Neuroimages into High-Dimensional Data Frames
-Version: 0.2.0
+Version: 0.3.0
 Authors@R: c(
     person("Joshua", "Milstein", email = "joshua.millstein@usc.edu", role = c("aut")),
     person("Jinyao", "Tian", email = "jinyaoti@usc.edu", role = c("aut", "cre"))

@@ -119,4 +119,4 @@ map2_eve <- function(mask_img_path, cmap = 'bwr_r', alpha = 1, save_path = NULL,
 }
 
 ##test
-map2_eve(mask_img_path = "/Users/jinyaotian/Downloads/mask_nifti_GM_Volume_pm25_test1_avg_red.nii.gz",save_path = '/Users/jinyaotian/Desktop/test.png',title = "Mask on EVE Template" )
+#map2_eve(mask_img_path = "/Users/jinyaotian/Downloads/mask_nifti_GM_Volume_pm25_test1_avg_red.nii.gz",save_path = '/Users/jinyaotian/Desktop/test.png',title = "Mask on EVE Template" )
