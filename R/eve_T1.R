@@ -37,7 +37,7 @@
 #' ## End(Not run)
 #'
 #' @importFrom neurobase readnii writenii
-#' @importFrom fslr fslreorient2std fsl_biascorrect fslbet fast fslstats
+#' @importFrom fslr flirt fslreorient2std fsl_biascorrect fslbet fast fslstats
 #' @importFrom dplyr %>%
 #' @importFrom EveTemplate getEvePath
 #' @export

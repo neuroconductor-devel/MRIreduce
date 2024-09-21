@@ -1,4 +1,4 @@
-url: https://jtian123.github.io/MRIreduce/
+url: https://uscbiostats.github.io/MRIreduce/
 template:
   bootstrap: 5
   bootswatch: cosmo  # Using the Flatly theme from Bootswatch
@@ -14,5 +14,5 @@ navbar:
       href: reference/index.html
   right:
     - text: View on source code
-      href: https://github.com/jtian123/MRIreduce
+      href: https://github.com/USCbiostats/MRIreduce
       icon: fab fa-github
