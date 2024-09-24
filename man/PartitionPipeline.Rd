@@ -15,7 +15,7 @@ reduced variables by tissue type by ROI.
 \item \href{#method-PartitionPipeline-iproc}{\code{PartitionPipeline$iproc()}}
 \item \href{#method-PartitionPipeline-supparfun}{\code{PartitionPipeline$supparfun()}}
 \item \href{#method-PartitionPipeline-map_suppar_roi}{\code{PartitionPipeline$map_suppar_roi()}}
-\item \href{#method-PartitionPipeline-parfun}{\code{PartitionPipeline$parfun()}}
+\item \href{#method-PartitionPipeline-partition_intensities}{\code{PartitionPipeline$partition_intensities()}}
 \item \href{#method-PartitionPipeline-tissue_segment}{\code{PartitionPipeline$tissue_segment()}}
 \item \href{#method-PartitionPipeline-Cmb_tissue_type}{\code{PartitionPipeline$Cmb_tissue_type()}}
 \item \href{#method-PartitionPipeline-process_indep_variables}{\code{PartitionPipeline$process_indep_variables()}}
@@ -71,11 +71,11 @@ reduced variables by tissue type by ROI.
 
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-PartitionPipeline-parfun"></a>}}
-\if{latex}{\out{\hypertarget{method-PartitionPipeline-parfun}{}}}
-\subsection{Method \code{parfun()}}{
+\if{html}{\out{<a id="method-PartitionPipeline-partition_intensities"></a>}}
+\if{latex}{\out{\hypertarget{method-PartitionPipeline-partition_intensities}{}}}
+\subsection{Method \code{partition_intensities()}}{
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{PartitionPipeline$parfun()}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{PartitionPipeline$partition_intensities()}\if{html}{\out{</div>}}
 }
 
 }

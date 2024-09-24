@@ -85,6 +85,10 @@ iproc <- function(tind, nfl, main_dir, outp_volume = TRUE) {
   saveRDS(loct, file=tnm)
   if(outp_volume){
     vnm = file.path(outpath_volume, "Bvolumes.rds")
+    #Convert Columns to Numertic
+    vvec$unit_voxel <- as.numeric(vvec$unit_voxel)
+    vvec$brainVolume <- as.numeric(vvec$brainVolume)
+    vvec$ICV <- as.numeric(vvec$ICV)
     saveRDS(vvec, file=vnm)
   }
   message(roi, " : ", "data extraction has been completed")
@@ -95,6 +99,8 @@ iproc <- function(tind, nfl, main_dir, outp_volume = TRUE) {
 # thresh_vec: Numeric vector specifying correlation thresholds.
 # B: Integer, the maximum group size.
 # output file structure: main_dir/suppar/roi.rds
+
+#' @importFrom reshape2 melt
 supparfun <- function(tind, roi,thresh_vec = seq(0.7, 1, 0.01), B = 2000, main_dir){
   inm = file.path(main_dir, "intensities",paste0("intensities_", roi,'_',tind, ".rds"))
   dati = readRDS(inm)
@@ -292,14 +298,14 @@ tissue_segment <- function(liste, thresh_vec, tind, tissue_type, main_dir) {
     brain_volume_path = file.path(main_dir,"volumes","Bvolumes.rds")
     if (file.exists(brain_volume_path)) {
       brainv_df <- readRDS(file = brain_volume_path)
+      brainv_df$unit_voxel <- as.numeric(brainv_df$unit_voxel)
       # First, merge the data frames on the "fname" column to align the "unit_voxel" values with the corresponding rows in volume_df
-      #merged_df <- merge(volume_df, brainv_df, by = "fname")
-      merge_df <- inner_join(volume_df, brainv_df, by = "fname")
+      merged_df <- inner_join(volume_df, brainv_df, by = "fname")
       # Multiply each column in volume_df (except "fname") by the "unit_voxel" column
       cols_to_multiply <- setdiff(names(volume_df), "fname")
       merged_df[cols_to_multiply] <- merged_df[cols_to_multiply] * merged_df$unit_voxel
       # Resulting data frame has the product, and you might want to remove the extra unit_voxel column if not needed anymore
-      final_df <- merged_df[, !names(merged_df) %in% c("unit_voxel", "brainVolume")]
+      final_df <- merged_df[, !names(merged_df) %in% c("unit_voxel", "brainVolume", "ICV")]
       row.names(final_df) = final_df$fname
       final_df$fname = NULL
       saveRDS(final_df, file = volume_file_path)

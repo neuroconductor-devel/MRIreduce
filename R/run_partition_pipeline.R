@@ -44,7 +44,7 @@ run_partition_pipeline <- function(tind, nfl, main_dir, tissue_type,ICC_thresh_v
   pipeline$iproc()
   pipeline$supparfun()
   pipeline$map_suppar_roi()
-  pipeline$parfun()
+  pipeline$partition_intensities()
   pipeline$tissue_segment()
   pipeline$Cmb_tissue_type()
   pipeline$process_indep_variables()

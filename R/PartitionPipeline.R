@@ -5,6 +5,7 @@
 #' reduced variables by tissue type by ROI.
 #'
 #' @import R6
+#' @importFrom parallel makeCluster parLapply stopCluster clusterExport clusterEvalQ
 #' @export
 PartitionPipeline <- R6Class("PartitionPipeline",
                            public = list(
@@ -57,11 +58,15 @@ PartitionPipeline <- R6Class("PartitionPipeline",
                              },
 
                              # Step4: Partition intensities based on super partitions using lapply
-                             parfun = function() {
+                             partition_intensities = function() {
                                dep_list_path = file.path(self$main_dir, "dep_list", paste0(self$roi,'.rds'))
                                listes <- readRDS(dep_list_path)
                                cat("Partitioning intensities for all sublists based on super partitions.\n")
                                cl <- makeCluster(self$num_cores)
+                               # Export necessary functions and variables
+                               clusterExport(cl, varlist = c("parfun", "self"), envir = environment())
+                               # Load required packages on worker nodes
+                               clusterEvalQ(cl, {library(MRIreduce); library(partition)})
                                parLapply(cl, listes, function(sub_list) {
                                  parfun(liste = sub_list,tind = self$tind, thresh_vec = self$ICC_thresh_vec, main_dir = self$main_dir)
                                })
@@ -75,8 +80,7 @@ PartitionPipeline <- R6Class("PartitionPipeline",
                                listes <- readRDS(dep_list_path)
                                cat("tissue segmentation for all sublists based on super partitions.\n")
                                lapply(listes, function(sub_list) {
-                                 tissue_segment(liste = sub_list,thresh_vec = self$ICC_thresh_vec,tind = self$tind, tissue_type =self$tissue_type,
-                                                brain_volume_path = NULL, main_dir = self$main_dir)
+                                 tissue_segment(liste = sub_list,thresh_vec = self$ICC_thresh_vec,tind = self$tind, tissue_type =self$tissue_type, main_dir = self$main_dir)
                                })
                              },
 

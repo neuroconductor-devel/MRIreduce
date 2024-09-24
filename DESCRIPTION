@@ -1,7 +1,7 @@
 Package: MRIreduce
 Type: Package
 Title: MRIreduce: An R Package for ROI-Based Transformation of Neuroimages into High-Dimensional Data Frames
-Version: 0.3.0
+Version: 0.6.0
 Authors@R: c(
     person("Joshua", "Milstein", email = "joshua.millstein@usc.edu", role = c("aut")),
     person("Jinyao", "Tian", email = "jinyaoti@usc.edu", role = c("aut", "cre"))
@@ -23,7 +23,8 @@ Imports:
     roxygen2,
     DT,
     remotes,
-    reticulate
+    reticulate,
+    data.table
 Depends: R (>= 3.5.0)
 SystemRequirements: FSL (FMRIB Software Library, available at https://fsl.fmrib.ox.ac.uk/fsl/docs/#/install/index)
 LinkingTo: 
@@ -37,4 +38,4 @@ Suggests:
     knitr,
     rmarkdown
 VignetteBuilder: knitr
-URL: https://github.com/jtian123/MRIreduce
+URL: https://github.com/USCbiostats/MRIreduce
