@@ -465,6 +465,13 @@ process_indep_variables <- function(indep_list, tissue_type, tind, roi, main_dir
   saveRDS(volume_dat, file = file.path(save_dir, paste0("volume.rds")))
 }
 
+# main_dir = '/Users/jinyaotian/Downloads/whims_test'
+# roi = 'inferior_frontal_gyrus_left'
+# indep_list_path = file.path(main_dir, "indep_list", paste0(roi,'.rds'))
+# indep_list <- readRDS(indep_list_path)
+# process_indep_variables(indep_list = indep_list, tissue_type = 2, tind = 5,
+#                         roi = roi, main_dir = main_dir)
+
 #Combine independent variables with reduced variables by tissue type by roi
 Cmb_indep_with_dep <- function(tissue_type, roi, thresh, main_dir){
   if (tissue_type == 3){

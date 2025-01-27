@@ -1,18 +1,18 @@
 url: https://uscbiostats.github.io/MRIreduce/
 template:
   bootstrap: 5
-  bootswatch: cosmo  # Using the Flatly theme from Bootswatch
-
+  bootswatch: cosmo
 navbar:
   title: MRIreduce
   left:
-    - text: Home
-      href: index.html
-    - text: Get Started
-      href: articles/MRIreduce.html  # Link directly to your vignette
-    - text: Reference
-      href: reference/index.html
+  - text: Home
+    href: index.html
+  - text: Get Started
+    href: articles/MRIreduce.html
+  - text: Reference
+    href: reference/index.html
   right:
-    - text: View on source code
-      href: https://github.com/USCbiostats/MRIreduce
-      icon: fab fa-github
+  - text: View on source code
+    href: https://github.com/USCbiostats/MRIreduce
+    icon: fab fa-github
+
