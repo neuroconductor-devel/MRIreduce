@@ -30,7 +30,9 @@ Depends:
     ANTsR,
     fslr,
     extrantsr,
-    EveTemplate
+    EveTemplate,
+    R6,
+    oro.nifti
 SystemRequirements: FSL (FMRIB Software Library, available at https://fsl.fmrib.ox.ac.uk/fsl/docs/#/install/index)
 LinkingTo: 
     Rcpp
