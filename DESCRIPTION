@@ -1,7 +1,7 @@
 Package: MRIreduce
 Type: Package
 Title: MRIreduce: An R Package for ROI-Based Transformation of Neuroimages into High-Dimensional Data Frames
-Version: 1.0.0
+Version: 1.0.1
 Authors@R: c(
     person("Joshua", "Milstein", email = "joshua.millstein@usc.edu", role = c("aut")),
     person("Jinyao", "Tian", email = "jinyaoti@usc.edu", role = c("aut", "cre"))
@@ -25,7 +25,12 @@ Imports:
     remotes,
     reticulate,
     data.table
-Depends: R (>= 3.5.0)
+Depends: 
+    R (>= 3.5.0),
+    ANTsR,
+    fslr,
+    extrantsr,
+    EveTemplate
 SystemRequirements: FSL (FMRIB Software Library, available at https://fsl.fmrib.ox.ac.uk/fsl/docs/#/install/index)
 LinkingTo: 
     Rcpp
