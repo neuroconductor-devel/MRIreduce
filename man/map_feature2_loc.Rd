@@ -40,7 +40,8 @@ This function performs the following steps:
 }
 \examples{
 \dontrun{
-loc_df <- map_feature2_loc(feature_name = "inferior_frontal_gyrus_left_module4_reduced_var_13", threshold = 0.8, main_dir = "/path/to/data")
+loc_df <- map_feature2_loc(feature_name = "inferior_frontal_gyrus_left_module4_reduced_var_13",
+  threshold = 0.8, main_dir = "/path/to/data")
 }
 
 }

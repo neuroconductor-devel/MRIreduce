@@ -8,7 +8,7 @@
 #' @importFrom parallel makeCluster parLapply stopCluster clusterExport clusterEvalQ
 #' @export
 PartitionPipeline <- R6Class("PartitionPipeline",
-                           public = list(
+                             public = list(
                              tind = NULL,
                              nfl = NULL,
                              main_dir = NULL,

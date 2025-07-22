@@ -64,7 +64,10 @@ modules based on the correlation data read from the temporary files. It ensures
 that the size of any module does not exceed the \code{B} parameter.
 }
 \examples{
-data(matrix(rnorm(10000), ncol = 100))
-suppar(tmp = data, thresh = c(0.5, 0.3, 0.1), n.chunkf = 100, B = 50,
-       compute.corr = TRUE, dir.tmp = "path/to/tempdir")
+\dontrun{
+  data(matrix(rnorm(10000), ncol = 100))
+  suppar(tmp = data, thresh = c(0.5, 0.3, 0.1), n.chunkf = 100, B = 50,
+    compute.corr = TRUE, dir.tmp = "path/to/tempdir")
+}
+
 }

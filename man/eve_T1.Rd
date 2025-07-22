@@ -49,8 +49,8 @@ volume of these tissues, providing key data points for clinical and research app
 Each step logs its progress with timestamps, aiding in debugging and optimization of processing times.
 }
 \examples{
-## Not run:
-eve_T1("path/to/your/image.nii.gz", "path/to/output", "/usr/local/fsl",  "NIFTI_GZ")
-## End(Not run)
+\dontrun{
+  eve_T1("path/to/your/image.nii.gz", "path/to/output", "/usr/local/fsl",  "NIFTI_GZ")
+}
 
 }

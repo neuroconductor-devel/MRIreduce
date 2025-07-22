@@ -16,6 +16,7 @@ load_required_data <- function(filename, package_name, envir = .GlobalEnv) {
   }
 }
 iproc <- function(tind, nfl, main_dir, outp_volume = TRUE) {
+  lab_df <- dat_eve <- outp <- NULL
   # Load Eve labels
   # Load necessary data
   load_required_data("eve_label_array.RData", "MRIreduce")
@@ -172,6 +173,7 @@ map_suppar_roi <- function(roi, main_dir) {
 #   intensities file structure: /main_dir/partition/roi/thresh/intensities/par_intensities_module
 #   intensities file map structure: /main_dir/partition/roi/thresh/map/par_intensities_module
 parfun = function(liste, tind, thresh_vec, main_dir){
+  partition <- mapping_key <- NULL
   roi = liste$ROI
   mydir = file.path(main_dir,"partition" ,roi)
   if(!dir.exists(mydir)) dir.create(mydir, recursive = TRUE)
@@ -224,6 +226,7 @@ parfun = function(liste, tind, thresh_vec, main_dir){
 #   Intensities file structure: /main_dir/partition/roi/thresh/tissue/intensities_module.rds
 #   Volume file structure: /main_dir/partition/roi/thresh/tissue/volume_module.rds
 tissue_segment <- function(liste, thresh_vec, tind, tissue_type, main_dir) {
+  inner_join <- NULL
   if (tissue_type == 3){
     t.name = 'WM'
   } else{
@@ -402,6 +405,7 @@ Cmb_tissue_type <- function(thresh, roi, tissue_type, main_dir){
 
 #Process independent variables from Super-Partition
 process_indep_variables <- function(indep_list, tissue_type, tind, roi, main_dir) {
+  bind_cols <- NULL
   if (tissue_type == 3){
     t.name = 'WM'
   } else{
@@ -510,6 +514,7 @@ Cmb_indep_with_dep <- function(tissue_type, roi, thresh, main_dir){
 #Combine by ROI
 concat_reduced_var <- function(roi, thresh, main_dir){
   #Structure of dir: /roi/thresh
+  str_extract <- files <- NULL
   dir = file.path(main_dir, roi, thresh)
   files_intensity <- list.files(path = file.path(dir, "intensities"))
   files_map <- list.files(path = file.path(dir, "map"))

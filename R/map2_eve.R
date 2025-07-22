@@ -32,6 +32,7 @@
 #'
 #' @export
 map2_eve <- function(mask_img_path, cmap = 'bwr_r', alpha = 1, save_path = NULL, ...) {
+  plot_mask_on_eve <- NULL
   # Function to install and use the correct Conda environment (Miniforge for ARM, Miniconda for x86)
   install_and_use_conda <- function() {
     # Detect system architecture (ARM vs. x86)
@@ -117,6 +118,3 @@ map2_eve <- function(mask_img_path, cmap = 'bwr_r', alpha = 1, save_path = NULL,
   # Call the Python function with the template image path
   plot_mask_on_eve(mask_img_path = mask_img_path, template_img_path = template_img_path, cmap = cmap, alpha = alpha,save_path = save_path, ...)
 }
-
-##test
-#map2_eve(mask_img_path = "/Users/jinyaotian/Downloads/mask_nifti_GM_Volume_pm25_test1_avg_red.nii.gz",save_path = '/Users/jinyaotian/Desktop/test.png',title = "Mask on EVE Template" )

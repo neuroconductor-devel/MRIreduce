@@ -32,9 +32,9 @@
 #' Each step logs its progress with timestamps, aiding in debugging and optimization of processing times.
 #'
 #' @examples
-#' ## Not run:
-#' eve_T1("path/to/your/image.nii.gz", "path/to/output", "/usr/local/fsl",  "NIFTI_GZ")
-#' ## End(Not run)
+#' \dontrun{
+#'   eve_T1("path/to/your/image.nii.gz", "path/to/output", "/usr/local/fsl",  "NIFTI_GZ")
+#' }
 #'
 #' @importFrom neurobase readnii writenii
 #' @importFrom fslr flirt fslreorient2std fsl_biascorrect fslbet fast fslstats
@@ -131,12 +131,4 @@ eve_T1 <- function(fpath, outpath, fsl_path = '/Users/jinyaotian/fsl', fsl_outpu
   save(outp, file = outfile)
   unlink(fl)
 } # end eve_T1()
-
-################################################################################
-# #test
-# fpath = "/Users/jinyaotian/Downloads/whims_test/raw_image"
-# opath = "/Users/jinyaotian/Downloads/whims_test/eve_T1"
-# files = list.files(fpath, full.names = TRUE)
-# # Apply the eve_T1 function to each file with additional parameters
-# results <- lapply(files, function(x) eve_T1(fpath = x, outpath = opath))
 

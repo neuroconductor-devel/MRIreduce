@@ -30,7 +30,7 @@ data_path <- system.file("extdata", "eve_label_info_dataframe.RData", package = 
 load(data_path)
 
 # Enhanced table format using kableExtra
-datatable(lab_df[c("integer_label", "text_label", "structure")], 
+DT::datatable(lab_df[c("integer_label", "text_label", "structure")], 
              options = list(pageLength = 20),  # Set number of rows per page
              caption = 'Interactive table of complete data from the brain regions dataset.')
 ```
@@ -129,7 +129,7 @@ data_path <- system.file("extdata", "intensities_whole.rds", package = "MRIreduc
 # Load the data
 df = readRDS(data_path)
 
-datatable(df, 
+DT::datatable(df, 
           options = list(
           pageLength = 4,        # Set number of rows per page
           scrollX = TRUE,        # Enable horizontal scrolling for columns
@@ -164,7 +164,6 @@ loc_df <- map_feature2_loc(feature_name = "inferior_frontal_gyrus_left_module4_r
 Below, shows loc_df dataset of reduced feature "inferior_frontal_gyrus_left_module4_reduced_var_13".
 
 ```{r echo=FALSE, results='asis'}
-library(DT)
 
 # Set the correct path to the RDS file within the package
 data_path <- system.file("extdata", "loc_df.rds", package = "MRIreduce")
@@ -173,7 +172,7 @@ data_path <- system.file("extdata", "loc_df.rds", package = "MRIreduce")
 df <- readRDS(data_path)
 
 # Enhanced table format using datatable
-datatable(df, 
+DT::datatable(df, 
           options = list(
             pageLength = 4,        # Set number of rows per page
             scrollX = TRUE,        # Enable horizontal scrolling for columns

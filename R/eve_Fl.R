@@ -20,12 +20,12 @@
 #' Volumes are calculated based on the segmented tissues.
 #'
 #' @examples
-#' ## Not run:
-#' eve_Fl("path/to/your/flair/image.nii.gz",
-#'        "path/to/output/",
-#'        "/usr/local/fsl",
-#'        "NIFTI_GZ")
-#' ## End(Not run)
+#' \dontrun{
+#'    eve_Fl("path/to/your/flair/image.nii.gz",
+#'          "path/to/output/",
+#'          "/usr/local/fsl",
+#'          "NIFTI_GZ")
+#' }
 #'
 #' @importFrom neurobase readnii writenii
 #' @importFrom extrantsr bias_correct fslbet_robust

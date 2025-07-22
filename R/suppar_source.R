@@ -39,11 +39,14 @@
 #'     - A list of character vectors, where each vector contains the names of
 #'       variables that form a module.
 #'     - A character vector of independent variables not included in any module.
+#'
+#' @examples \dontrun{
+#'   data(matrix(rnorm(10000), ncol = 100))
+#'   suppar(tmp = data, thresh = c(0.5, 0.3, 0.1), n.chunkf = 100, B = 50,
+#'     compute.corr = TRUE, dir.tmp = "path/to/tempdir")
+#' }
+#'
 #' @export
-#' @examples
-#' data(matrix(rnorm(10000), ncol = 100))
-#' suppar(tmp = data, thresh = c(0.5, 0.3, 0.1), n.chunkf = 100, B = 50,
-#'        compute.corr = TRUE, dir.tmp = "path/to/tempdir")
 suppar = function(tmp, thresh=NULL, n.chunkf=10000, B = 2000, compute.corr=TRUE, dist.thresh=NULL, dir.tmp){
   cchunk.l = 10^6 # chunk processing of correlation file datasets, number of rows
   if(is.null(colnames(tmp))) colnames(tmp) = paste0("V", 1:ncol(tmp))
@@ -122,6 +125,7 @@ dist2mat = function(m1, m2){
 
 
 corfun1 = function(dat, dat2=NULL, thresh, dir.tmp, dist.thresh=NULL){
+  dist <- cor <- NULL
   if(!is.null(dist.thresh)){
     if(is.null(dat2)){
       dmat = as.matrix(dist(t(dat[1:3,])))

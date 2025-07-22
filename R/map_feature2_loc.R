@@ -28,11 +28,13 @@
 #'
 #' @examples
 #' \dontrun{
-#' loc_df <- map_feature2_loc(feature_name = "inferior_frontal_gyrus_left_module4_reduced_var_13", threshold = 0.8, main_dir = "/path/to/data")
+#' loc_df <- map_feature2_loc(feature_name = "inferior_frontal_gyrus_left_module4_reduced_var_13",
+#'   threshold = 0.8, main_dir = "/path/to/data")
 #' }
 #'
 #' @export
 map_feature2_loc <- function(feature_name, threshold,main_dir) {
+  lab_df <- NULL
   if (grepl("reduced_var", feature_name)) {
     # Extract the ROI for the format "Roi_module_reduced_var"
     roi <- sub("_module.*", "", feature_name)  # Remove everything after and including "_module"

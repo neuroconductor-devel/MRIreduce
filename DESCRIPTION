@@ -11,23 +11,14 @@ Description: MRIreduce is an advanced R package designed to convert NIfTI format
 License: MIT + file LICENSE
 Imports:
     Rcpp,
-    devtools,
-    partition,
     dplyr,
-    ggplot2,
     neurobase,
-    purrr,
-    tibble,
     reshape2,
     parallel,
-    roxygen2,
-    DT,
-    remotes,
     reticulate,
-    data.table
+    DT
 Depends: 
     R (>= 3.5.0),
-    ANTsR,
     fslr,
     extrantsr,
     EveTemplate,
@@ -38,7 +29,6 @@ LinkingTo:
     Rcpp
 Encoding: UTF-8
 Language: en-US
-LazyData: true
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.3.2
 Suggests: 
