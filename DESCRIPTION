@@ -1,38 +1,53 @@
 Package: MRIreduce
 Type: Package
-Title: MRIreduce: An R Package for ROI-Based Transformation of Neuroimages into High-Dimensional Data Frames
+Title: MRIreduce: An R Package for ROI-Based Transformation of
+        Neuroimages into High-Dimensional Data Frames
 Version: 1.0.1
-Authors@R: c(
-    person("Joshua", "Milstein", email = "joshua.millstein@usc.edu", role = c("aut")),
-    person("Jinyao", "Tian", email = "jinyaoti@usc.edu", role = c("aut", "cre"))
-  )
-Maintainer: Jinyao Tian <jinyaoti@usc.edu>, Joshua Milstein <joshua.millstein@usc.edu>
-Description: MRIreduce is an advanced R package designed to convert NIfTI format T1/FL neuroimages into structured, high-dimensional 2D data frames, focusing on region of interest (ROI) based processing. This package incorporates a key algorithm called ‘partition’, which offers a fast, flexible framework for agglomerative partitioning based on the Direct-Measure-Reduce approach. This method ensures that each reduced variable maintains a user-specified minimum level of information while being interpretable, as each maps uniquely to one variable in the reduced dataset. The ‘partition’ algorithm, detailed in Millstein et al. (2020), allows for customization in variable selection, measurement of information loss, and data reduction methods. NeuroPartitioner is indispensable for researchers requiring efficient, accurate preparation of neuroimaging data for detailed statistical analysis and machine learning applications, enhancing the interpretability and utility of neuroimaging studies.
+Authors@R: c( person("Joshua", "Milstein", email =
+        "joshua.millstein@usc.edu", role = c("aut")), person("Jinyao",
+        "Tian", email = "jinyaoti@usc.edu", role = c("aut", "cre")) )
+Maintainer: Jinyao Tian <jinyaoti@usc.edu>, Joshua Milstein
+        <joshua.millstein@usc.edu>
+Description: MRIreduce is an advanced R package designed to convert
+        NIfTI format T1/FL neuroimages into structured,
+        high-dimensional 2D data frames, focusing on region of interest
+        (ROI) based processing. This package incorporates a key
+        algorithm called <e2><80><98>partition<e2><80><99>, which
+        offers a fast, flexible framework for agglomerative
+        partitioning based on the Direct-Measure-Reduce approach. This
+        method ensures that each reduced variable maintains a
+        user-specified minimum level of information while being
+        interpretable, as each maps uniquely to one variable in the
+        reduced dataset. The <e2><80><98>partition<e2><80><99>
+        algorithm, detailed in Millstein et al. (2020), allows for
+        customization in variable selection, measurement of information
+        loss, and data reduction methods. NeuroPartitioner is
+        indispensable for researchers requiring efficient, accurate
+        preparation of neuroimaging data for detailed statistical
+        analysis and machine learning applications, enhancing the
+        interpretability and utility of neuroimaging studies.
 License: MIT + file LICENSE
-Imports:
-    Rcpp,
-    dplyr,
-    neurobase,
-    reshape2,
-    parallel,
-    reticulate,
-    DT
-Depends: 
-    R (>= 3.5.0),
-    fslr,
-    extrantsr,
-    EveTemplate,
-    R6,
-    oro.nifti
-SystemRequirements: FSL (FMRIB Software Library, available at https://fsl.fmrib.ox.ac.uk/fsl/docs/#/install/index)
-LinkingTo: 
-    Rcpp
+Imports: Rcpp, dplyr, neurobase, reshape2, parallel, reticulate, DT
+Depends: R (>= 3.5.0), fslr, extrantsr, EveTemplate, R6, oro.nifti
+SystemRequirements: FSL (FMRIB Software Library, available at
+        https://fsl.fmrib.ox.ac.uk/fsl/docs/#/install/index)
+LinkingTo: Rcpp
 Encoding: UTF-8
 Language: en-US
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.3.2
 Suggests: 
+    covr,
     knitr,
-    rmarkdown
+    rmarkdown,
+    testthat
 VignetteBuilder: knitr
-URL:https://uscbiostats.github.io/MRIreduce/
+URL: https://uscbiostats.github.io/MRIreduce/
+Repository: Neuroconductor-Devel
+Remotes: 
+    neuroconductor-devel/oro.nifti@517ce5312094bf1ecee49bd09024769d3e5d2daa,
+    neuroconductor-devel/EveTemplate@b373d51f763d32987f9cb0491aa33d9b29b729ea,
+    neuroconductor-devel/neurobase@bed9014475564a8aaf3ddfcb64f3b8439383b99d,
+    neuroconductor-devel/fslr@22c50545a095a3a02deec976b23fa6a349e717ac,
+    neuroconductor-devel/extrantsr@25077d6f04d8e3739c63020d8342b5eff11bccca
+biocViews: 
